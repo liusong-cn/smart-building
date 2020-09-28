@@ -2,6 +2,7 @@ package com.bz.common.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
@@ -11,6 +12,7 @@ import java.io.Serializable;
  **/
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class Result<V> implements Serializable {
 
     private static final long serialVersionUID = 2l;
@@ -19,12 +21,15 @@ public class Result<V> implements Serializable {
 
     private String message;
 
+    private int total;
+
     private V data;
 
     //通过枚举和自定义data返回result
-    public Result(R r, V data){
+    public Result(R r, V data,int total){
         code = r.getCode();
         message = r.getMsg();
+        this.total = total;
         this.data = data;
     }
 
@@ -41,8 +46,8 @@ public class Result<V> implements Serializable {
     }
 
     //成功返回带数据
-    public  static <V> Result<V> ok(R r, V data){
-        return new Result<V>(r.SUCCESS,data);
+    public  static <V> Result<V> ok(R r, V data,int total){
+        return new Result<V>(r.SUCCESS,data,total);
     }
 
     //失败默认返回

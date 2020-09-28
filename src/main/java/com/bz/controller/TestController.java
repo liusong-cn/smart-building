@@ -44,7 +44,7 @@ public class TestController {
     @GetMapping("/res")
     public Result<String> responseTest(){
         //成功返回带数据
-        Result<String> r = new Result<>(R.SUCCESS,"good");
+        Result<String> r = new Result<>(R.SUCCESS,"good",1);
         return r;
     }
 
@@ -54,7 +54,7 @@ public class TestController {
         List<SimpleObj1> simpleObj1s = new ArrayList<>();
         simpleObj1s.add(new SimpleObj1(13,"zhangsan","114@qq.com","13158392932"));
         simpleObj1s.add(new SimpleObj1(14,"lisi","114@qq.com","13158392932"));
-        Result<List> r1 = new Result<>(R.SUCCESS, simpleObj1s);
+        Result<List> r1 = new Result<>(R.SUCCESS, simpleObj1s,2);
         return r1;
     }
 

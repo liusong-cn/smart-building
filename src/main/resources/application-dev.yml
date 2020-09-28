@@ -16,3 +16,10 @@ mybatis:
   type-aliases-package: com.bz
   mapper-locations: classpath:mapper/*Mapper.xml
   config-location: classpath:mybatis-config.xml
+
+car:
+  monitor:
+    history: http://47.108.29.69:3002/mock/37/back/cd/historyData
+    warning: http://47.108.29.69:3002/mock/37/back/cd/warningData
+    info: http://47.108.29.69:3002/mock/37/back/cd/info
+    realtime: http://47.108.29.69:3002/mock/37/back/cd/realtimeData

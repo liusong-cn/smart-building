@@ -36,7 +36,7 @@ public class TestValidationController {
             //这里可以抛出自定义异常,或者进行其他操作
             return new Result<String>(-1,messages);
         }
-        return new Result<String>(R.SUCCESS,"good");
+        return new Result<String>(R.SUCCESS,"good",1);
     }
 
     /**
@@ -46,6 +46,6 @@ public class TestValidationController {
      */
     @PostMapping("/simple1")
     public Result<String> postCheck(@RequestBody@Valid SimpleObj1 obj){
-        return new Result<String>(R.SUCCESS,"good");
+        return new Result<String>(R.SUCCESS,"good",1);
     }
 }
