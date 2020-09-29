@@ -1,25 +1,23 @@
 package com.bz.service;
 
-import cn.hutool.json.JSON;
-import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import com.bz.common.entity.Result;
 import com.bz.properties.CarMonitorProperties;
-import jdk.nashorn.internal.runtime.regexp.JoniRegExp;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpEntity;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import springfox.documentation.schema.TypeNameExtractor;
 
 import java.io.IOException;
-import java.util.*;
+import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author:ls
@@ -35,6 +33,7 @@ public class CarMonitorService {
     //采用properties文件集中管理
     @Autowired
     private CarMonitorProperties carMonitorProperties;
+
 
     public Result<String> historyMonitoringInfo(String carNo, String startDateTime, String endDateTime){
         try(CloseableHttpClient httpClient = HttpClientBuilder.create().build();
@@ -63,7 +62,7 @@ public class CarMonitorService {
      * @return
      */
     public Result<String> warningInfo(){
-        return null;
+        return httpGet(carMonitorProperties.getWarning());
     }
 
     /**
@@ -71,7 +70,7 @@ public class CarMonitorService {
      * @return
      */
     public Result<String> carsInfo(){
-        return null;
+        return httpGet(carMonitorProperties.getInfo());
     }
 
     /**
@@ -79,7 +78,7 @@ public class CarMonitorService {
      * @return
      */
     public Result<String> realtimeInfo(){
-        return null;
+        return httpGet(carMonitorProperties.getRealtime());
     }
 
     /**
@@ -94,20 +93,69 @@ public class CarMonitorService {
         StringBuffer sb = new StringBuffer();
         sb.append(url + "?");
         for (String key:paramMap.keySet()) {
-            sb.append(key +"=" + paramMap.get(key) + "&");
+            String value = paramMap.get(key);
+            //根据约定以下方"+"号方式处理空格
+//            if(value.contains(" ")){
+//                value = URLEncoder.encode(value);
+//            }
+            sb.append(key +"=" + value + "&");
         }
+
         String s = sb.substring(0,sb.length() - 1);
+        //处理参数中yyyy-mm-dd hh:mm:ss日期格式中空格问题
+        s = s.replaceAll(" ","+");
         return s;
     }
 
+    /**
+     * 根据参数类型返回对应包装对象
+     * @param s
+     * @param type
+     * @param <E>
+     * @return
+     */
     private <E> Result<E> format(String s, E type){
         JSONObject j = new JSONObject(s);
         Result<E> result = new Result<E>();
-        result.setCode(Integer.valueOf((String) j.get("code")));
-        result.setTotal(Integer.valueOf((String) j.get("total")));
+        result.setCode((Integer) j.get("code"));
+        result.setTotal((Integer) j.get("total"));
         result.setMessage((String) j.get("message"));
         E data = (E) j.get("data");
         result.setData(data);
         return result;
+    }
+
+    /**
+     * 通用httpget请求
+     * @param url
+     * @return
+     */
+    private Result<String> httpGet(String url){
+        Result<String> r = null;
+        CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+        CloseableHttpResponse httpResponse = null;
+        try {
+            HttpGet httpGet = new HttpGet(url);
+            httpResponse = httpClient.execute(httpGet);
+            HttpEntity httpEntity = httpResponse.getEntity();
+            String result = EntityUtils.toString(httpEntity);
+            r = format(result,new String("字符串类型"));
+        } catch (ClientProtocolException e) {
+            log.error("客户端协议不匹配:" + url);
+            e.printStackTrace();
+        } catch (IOException e) {
+            log.error("连接失败：" + url);
+            e.printStackTrace();
+        }finally {
+            if(httpClient != null){
+                try {
+                    httpClient.close();
+                } catch (IOException e) {
+                    log.error("客户端无法关闭：" + url);
+                    e.printStackTrace();
+                }
+            }
+        }
+        return r;
     }
 }

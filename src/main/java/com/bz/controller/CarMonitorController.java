@@ -28,4 +28,22 @@ public class CarMonitorController {
         log.info("查询车辆历史信息");
         return carMonitorService.historyMonitoringInfo(carNo,startDateTime,endDateTime);
     }
+
+    @GetMapping("/realtimeInfo")
+    public Result<String> realtimeInfo(){
+        log.info("查询车辆实时信息");
+        return carMonitorService.realtimeInfo();
+    }
+
+    @GetMapping("/carInfo")
+    public Result<String> carInfo(){
+        log.info("查询车辆基本信息");
+        return carMonitorService.carsInfo();
+    }
+
+    @GetMapping("/warningInfo")
+    public Result<String> warningInfo(){
+        log.info("查询车辆告警信息");
+        return carMonitorService.warningInfo();
+    }
 }

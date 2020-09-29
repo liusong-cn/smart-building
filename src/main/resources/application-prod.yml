@@ -1,0 +1,25 @@
+server:
+  port: 8080
+#  servlet:
+#    context-path: /sb
+spring:
+  datasource:
+    name: db1
+    url: jdbc:mysql://localhost:3306/smartdb?useUnicode=true&characterEncoding=UTF8&&serverTimezone=GMT%2B8
+    username: root
+    password: root
+    type: com.alibaba.druid.pool.DruidDataSource
+    driverClassName: com.mysql.jdbc.Driver
+  application:
+    name: smartbuilding
+mybatis:
+  type-aliases-package: com.bz
+  mapper-locations: classpath:mapper/*Mapper.xml
+  config-location: classpath:mybatis-config.xml
+
+car:
+  monitor:
+    history: http://39.108.247.181:8083/back/cd/historyData
+    warning: http://39.108.247.181:8083/back/cd/warningData
+    info: http://39.108.247.181:8083/back/cd/info
+    realtime: http://39.108.247.181:8083/back/cd/realtimeData
