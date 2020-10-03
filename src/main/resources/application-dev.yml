@@ -23,3 +23,11 @@ car:
     warning: http://47.108.29.69:3002/mock/37/back/cd/warningData
     info: http://47.108.29.69:3002/mock/37/back/cd/info
     realtime: http://47.108.29.69:3002/mock/37/back/cd/realtimeData
+
+zhatubao:
+  username: gxenv
+  appkey: r42ee45t
+  appsecret: 1w233e4rsd54tf5t
+  getAuthTokenUrl: http://ticketapitest.shomes.cn/api/data/getAuthToken
+  getVehicleInfoUrl: http://ticketapitest.shomes.cn/api/data/getVehicleInfo
+  getVehicleStatusurl: http://ticketapitest.shomes.cn/api/data/getVehicleStatus
