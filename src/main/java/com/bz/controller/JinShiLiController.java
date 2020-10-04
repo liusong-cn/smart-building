@@ -35,9 +35,7 @@ public class JinShiLiController {
 
     @PostMapping(value = "/pressureCollect", consumes = APPLICATION_JSON_VALUE)
     public Result pressureCollect(@RequestBody TbWaterPressureEntity entity) throws Exception {
-        System.out.println("1111");
         int result = tbWaterPressureMapper.insert(entity);
-        System.out.println(result);
         if (result != 1) {
             return new Result(R.FAILURE);
         }
