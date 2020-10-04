@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bz.mapper.TbElectricityDataMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.bz.common.entity.TbElectricityDataEntity">
+    <result column="id" property="id" />
+        <result column="deviceCode" property="deviceCode" />
+        <result column="sampleElectricity1" property="sampleElectricity1" />
+        <result column="sampleElectricity2" property="sampleElectricity2" />
+        <result column="sampleElectricity3" property="sampleElectricity3" />
+        <result column="sampleElectricity4" property="sampleElectricity4" />
+        <result column="sampleElectricity5" property="sampleElectricity5" />
+        <result column="sampleElectricity6" property="sampleElectricity6" />
+        <result column="sampleElectricity7" property="sampleElectricity7" />
+        <result column="sampleElectricity8" property="sampleElectricity8" />
+        <result column="sampleElectricity9" property="sampleElectricity9" />
+        <result column="sampleTime" property="sampleTime" />
+    </resultMap>
+
+</mapper>

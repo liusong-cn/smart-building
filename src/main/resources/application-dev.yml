@@ -1,15 +1,14 @@
 server:
-  port: 8080
+  port: 8888
 #  servlet:
 #    context-path: /sb
 spring:
   datasource:
-    name: db1
-    url: jdbc:mysql://localhost:3306/smartdb?useUnicode=true&characterEncoding=UTF8&&serverTimezone=GMT%2B8
+    url: jdbc:mysql://172.24.131.57:40155/smartdb?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&autoReconnectForPools=true&useSSL=false&serverTimezone=Hongkong&allowMultiQueries=true
     username: root
-    password: root
+    password: 123456
     type: com.alibaba.druid.pool.DruidDataSource
-    driverClassName: com.mysql.jdbc.Driver
+    driverClassName: com.mysql.cj.jdbc.Driver
   application:
     name: smartbuilding
 mybatis:
