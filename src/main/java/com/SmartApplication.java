@@ -9,7 +9,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
  * @author:ls
  * @date: 2020/9/24 17:26
  **/
-//@EnableScheduling
+@EnableScheduling
 @SpringBootApplication
 @MapperScan(value = "com.bz.mapper")
 public class SmartApplication {
