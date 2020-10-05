@@ -6,13 +6,15 @@ import com.bz.common.entity.TbElectricityDataEntity;
 import com.bz.common.entity.TbWaterPressureEntity;
 import com.bz.mapper.TbElectricityDataMapper;
 import com.bz.mapper.TbWaterPressureMapper;
+import com.bz.service.JinShiLiService;
+import com.bz.utils.AccessTokenUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.Resource;
+import java.util.List;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -33,6 +35,9 @@ public class JinShiLiController {
     @Autowired
     private TbElectricityDataMapper tbElectricityDataMapper;
 
+    @Resource
+    private JinShiLiService jinShiLiService;
+
     @PostMapping(value = "/pressureCollect", consumes = APPLICATION_JSON_VALUE)
     public Result pressureCollect(@RequestBody TbWaterPressureEntity entity) throws Exception {
         System.out.println("1111");
@@ -51,5 +56,27 @@ public class JinShiLiController {
             return new Result(R.FAILURE);
         }
         return new Result(R.SUCCESS);
+    }
+
+    /**
+     * 可视化侧获取水压采集设备信息
+     * @param deviceCode
+     * @return
+     */
+    @GetMapping("/getPressureInfo")
+    public Result getPressureInfo(@RequestParam(value = "deviceCode", required = true) String deviceCode){
+        log.info("查询水压采集设备信息");
+        return jinShiLiService.getPressureInfo(deviceCode);
+    }
+
+    /**
+     * 可视化侧获取电流采集设备信息
+     * @param deviceCode
+     * @return
+     */
+    @GetMapping("/getVehicleInfo")
+    public Result<List> getVehicleInfo(@RequestParam(value = "deviceCode", required = true) String deviceCode){
+        log.info("查询电流采集设备信息");
+        return jinShiLiService.getVehicleInfo(deviceCode);
     }
 }
