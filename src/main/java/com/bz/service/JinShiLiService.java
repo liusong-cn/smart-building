@@ -44,7 +44,7 @@ public class JinShiLiService {
         return result;
     }
 
-    public Result getVehicleInfo(String deviceCode){
+    public Result getElectricityInfo(String deviceCode){
         Result result = new Result<>();
         if(deviceCode.isEmpty()){
             putMessage(result,-1,"缺少参数");

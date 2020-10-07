@@ -72,9 +72,9 @@ public class JinShiLiController {
      * @param deviceCode
      * @return
      */
-    @GetMapping("/getVehicleInfo")
-    public Result<List> getVehicleInfo(@RequestParam(value = "deviceCode", required = true) String deviceCode){
+    @GetMapping("/getElectricityInfo")
+    public Result<List> getElectricityInfo(@RequestParam(value = "deviceCode", required = true) String deviceCode){
         log.info("查询电流采集设备信息");
-        return jinShiLiService.getVehicleInfo(deviceCode);
+        return jinShiLiService.getElectricityInfo(deviceCode);
     }
 }
