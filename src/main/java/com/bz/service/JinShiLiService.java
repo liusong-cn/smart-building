@@ -1,5 +1,6 @@
 package com.bz.service;
 
+import cn.hutool.json.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.bz.common.entity.Result;
@@ -7,11 +8,23 @@ import com.bz.common.entity.TbElectricityDataEntity;
 import com.bz.common.entity.TbWaterPressureEntity;
 import com.bz.mapper.TbElectricityDataMapper;
 import com.bz.mapper.TbWaterPressureMapper;
+import com.bz.properties.JinShiLiProperties;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Slf4j
@@ -22,6 +35,9 @@ public class JinShiLiService {
 
     @Resource
     private TbElectricityDataMapper tbElectricityDataMapper;
+
+    @Autowired
+    private JinShiLiProperties jinShiLiProperties;
 
     public Result getPressureInfo(String deviceCode){
         Result result = new Result<>();
@@ -69,5 +85,107 @@ public class JinShiLiService {
         result.setCode(code);
         result.setMessage(message);
         return result;
+    }
+
+    /**
+     * 获取车辆出入场信息
+     * @param channel
+     * @return
+     */
+    public Result<String> getCarInfo(String channel){
+        Result<String> r = null;
+        Map<String,String> paramMap = new HashMap<>();
+        paramMap.put("channel",channel);
+        String url = joinParams(jinShiLiProperties.getCarInfo(),paramMap);
+        CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+        CloseableHttpResponse httpResponse = null;
+        try {
+            HttpGet httpGet = new HttpGet(url);
+            httpResponse = httpClient.execute(httpGet);
+            HttpEntity httpEntity = httpResponse.getEntity();
+            String result = EntityUtils.toString(httpEntity);
+            r = format(result,new String("字符串类型"));
+        } catch (ClientProtocolException e) {
+            log.error("客户端协议不匹配:" + url);
+            e.printStackTrace();
+        } catch (IOException e) {
+            log.error("连接失败：" + url);
+            e.printStackTrace();
+        }finally {
+            if(httpClient != null){
+                try {
+                    httpClient.close();
+                } catch (IOException e) {
+                    log.error("客户端无法关闭：" + url);
+                    e.printStackTrace();
+                }
+            }
+        }
+        return r;
+    }
+
+    private String joinParams(String url, Map<String,String> paramMap){
+        if(paramMap == null || paramMap.size() == 0){
+            return url;
+        }
+        StringBuffer sb = new StringBuffer();
+        sb.append(url + "?");
+        for (String key:paramMap.keySet()) {
+            String value = paramMap.get(key);
+            sb.append(key +"=" + value + "&");
+        }
+
+        String s = sb.substring(0,sb.length() - 1);
+        //处理参数中yyyy-mm-dd hh:mm:ss日期格式中空格问题
+        s = s.replaceAll(" ","+");
+        return s;
+    }
+
+    private <E> Result<E> format(String s, E type){
+        JSONObject j = new JSONObject(s);
+        Result<E> result = new Result<E>();
+        result.setCode((Integer) j.get("code"));
+        result.setTotal((Integer) j.get("total"));
+        result.setMessage((String) j.get("message"));
+        E data = (E) j.get("data");
+        result.setData(data);
+        return result;
+    }
+
+    /**
+     * 获取道闸信息
+     * @param channel
+     * @return
+     */
+    public Result<String> getBarrierGateInfo(String channel){
+        Result<String> r = null;
+        Map<String,String> paramMap = new HashMap<>();
+        paramMap.put("channel",channel);
+        String url = joinParams(jinShiLiProperties.getBarrierGateInfo(),paramMap);
+        CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+        CloseableHttpResponse httpResponse = null;
+        try {
+            HttpGet httpGet = new HttpGet(url);
+            httpResponse = httpClient.execute(httpGet);
+            HttpEntity httpEntity = httpResponse.getEntity();
+            String result = EntityUtils.toString(httpEntity);
+            r = format(result,new String("字符串类型"));
+        } catch (ClientProtocolException e) {
+            log.error("客户端协议不匹配:" + url);
+            e.printStackTrace();
+        } catch (IOException e) {
+            log.error("连接失败：" + url);
+            e.printStackTrace();
+        }finally {
+            if(httpClient != null){
+                try {
+                    httpClient.close();
+                } catch (IOException e) {
+                    log.error("客户端无法关闭：" + url);
+                    e.printStackTrace();
+                }
+            }
+        }
+        return r;
     }
 }

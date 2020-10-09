@@ -40,8 +40,10 @@ public class JinShiLiController {
 
     @PostMapping(value = "/pressureCollect", consumes = APPLICATION_JSON_VALUE)
     public Result pressureCollect(@RequestBody TbWaterPressureEntity entity) throws Exception {
+        log.info("接收水压数据");
         int result = tbWaterPressureMapper.insert(entity);
         if (result != 1) {
+            log.info("新增水压数据失败");
             return new Result(R.FAILURE);
         }
         return new Result(R.SUCCESS);
@@ -49,8 +51,10 @@ public class JinShiLiController {
 
     @PostMapping(value = "/electricityCollect", consumes = APPLICATION_JSON_VALUE)
     public Result electricityCollect(@RequestBody TbElectricityDataEntity entity) throws Exception {
+        log.info("接收电流数据");
         int result = tbElectricityDataMapper.insert(entity);
         if (result != 1) {
+            log.info("新增电流数据失败");
             return new Result(R.FAILURE);
         }
         return new Result(R.SUCCESS);
@@ -76,5 +80,23 @@ public class JinShiLiController {
     public Result<List> getElectricityInfo(@RequestParam(value = "deviceCode", required = true) String deviceCode){
         log.info("查询电流采集设备信息");
         return jinShiLiService.getElectricityInfo(deviceCode);
+    }
+
+    @GetMapping("/getCarInfo")
+    public Result getCarInfo(@RequestParam(value = "channel",required = true) String channel){
+        if(channel.isEmpty()){
+            return new Result<>(-1,"通道号不能为空");
+        }
+        log.info("查询车辆最近出入场信息");
+        return jinShiLiService.getCarInfo(channel);
+    }
+
+    @GetMapping("/getBarrierGateInfo")
+    public Result<String> getBarrierGateInfo(@RequestParam(value = "channel",required = true) String channel){
+        if(channel.isEmpty()){
+            return new Result<>(-1,"通道号不能为空");
+        }
+        log.info("查询停车场道闸信息");
+        return jinShiLiService.getBarrierGateInfo(channel);
     }
 }
