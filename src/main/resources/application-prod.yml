@@ -30,6 +30,7 @@ zhatubao:
   getAuthTokenUrl: http://ticketapitest.shomes.cn/api/data/getAuthToken
   getVehicleInfoUrl: http://ticketapitest.shomes.cn/api/data/getVehicleInfo
   getVehicleStatusurl: http://ticketapitest.shomes.cn/api/data/getVehicleStatus
+  getVehicleRecentPic: http://ticketapitest.shomes.cn/api/data/getVehicleRecentPic
 
 #金时利LED
 #KIMSHL:

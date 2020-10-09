@@ -42,6 +42,9 @@ public class ZhaTuBaoController {
     @Value("${zhatubao.getVehicleStatusurl}")
     private String vehicleStatusurl;
 
+    @Value("${zhatubao.getVehicleRecentPic}")
+    private String vehicleRecentPic;
+
     @Resource
     private ZhaTuBaoService zhaTuBaoService;
 
@@ -58,4 +61,12 @@ public class ZhaTuBaoController {
         String token = AccessTokenUtil.accessToken.getAccess_token();
         return zhaTuBaoService.getVehicleInfoAndStatus(username, appkey, token, plateNo, vehicleStatusurl);
     }
+
+    @GetMapping("/getVehicleRecentPic")
+    public Result<List> getVehicleRecentPic(@RequestParam(value = "plateNo", required = true) String plateNo){
+        log.info("查询车辆图片信息");
+        String token = AccessTokenUtil.accessToken.getAccess_token();
+        return zhaTuBaoService.getVehicleInfoAndStatus(username, appkey, token, plateNo, vehicleRecentPic);
+    }
+
 }
