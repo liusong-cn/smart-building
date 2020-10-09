@@ -27,10 +27,10 @@ zhatubao:
   username: gaoxin
   appkey: tr67y8uu
   appsecret: wdr43ee5y7u44ffg
-  getAuthTokenUrl: http://ticketapitest.shomes.cn/api/data/getAuthToken
-  getVehicleInfoUrl: http://ticketapitest.shomes.cn/api/data/getVehicleInfo
-  getVehicleStatusurl: http://ticketapitest.shomes.cn/api/data/getVehicleStatus
-  getVehicleRecentPic: http://ticketapitest.shomes.cn/api/data/getVehicleRecentPic
+  getAuthTokenUrl: http://ticketapi.shomes.cn/api/data/getAuthToken
+  getVehicleInfoUrl: http://ticketapi.shomes.cn/api/data/getVehicleInfo
+  getVehicleStatusurl: http://ticketapi.shomes.cn/api/data/getVehicleStatus
+  getVehicleRecentPic: http://ticketapi.shomes.cn/api/data/getVehicleRecentPic
 
 #金时利LED
 #KIMSHL:
