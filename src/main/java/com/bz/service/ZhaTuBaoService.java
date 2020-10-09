@@ -57,7 +57,9 @@ public class ZhaTuBaoService {
             params.put("username", username);
             params.put("appkey", appkey);
             params.put("token", token);
-            params.put("plateNo", plateNo);
+            if (plateNo != null && !plateNo.isEmpty()) {
+                params.put("plateNo", plateNo);
+            }
             String url = joinParams(baseUrl, params);
             HttpGet httpGet = new HttpGet(url);
             httpResponse = httpClient.execute(httpGet);
