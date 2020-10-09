@@ -24,9 +24,9 @@ car:
     realtime: http://39.108.247.181:8083/back/cd/realtimeData
 
 zhatubao:
-  username: gxenv
-  appkey: r42ee45t
-  appsecret: 1w233e4rsd54tf5t
+  username: gaoxin
+  appkey: tr67y8uu
+  appsecret: wdr43ee5y7u44ffg
   getAuthTokenUrl: http://ticketapitest.shomes.cn/api/data/getAuthToken
   getVehicleInfoUrl: http://ticketapitest.shomes.cn/api/data/getVehicleInfo
   getVehicleStatusurl: http://ticketapitest.shomes.cn/api/data/getVehicleStatus
