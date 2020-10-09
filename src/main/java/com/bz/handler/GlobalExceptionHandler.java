@@ -4,6 +4,7 @@ import com.bz.common.entity.Result;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -53,5 +54,15 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public Result ExceptionHandler(Exception e){
         return new Result(-1,"error");
+    }
+
+    /**
+     * 方法缺少参数处理
+     * @param e
+     * @return
+     */
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public Result missingParamExceptionHandler(MissingServletRequestParameterException e){
+        return new Result(-1,e.getMessage());
     }
 }
