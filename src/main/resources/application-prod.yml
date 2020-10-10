@@ -43,5 +43,5 @@ zhatubao:
 
 #金时利
 jinshili:
-  carInfo:
-  barrierGateInfo:
+  carInfo: http://47.108.29.69:18082/park/exitAndEntry
+  barrierGateInfo: http://47.108.29.69:18082/park/gateInfo
