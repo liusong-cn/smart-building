@@ -105,7 +105,7 @@ public class JinShiLiService {
             httpResponse = httpClient.execute(httpGet);
             HttpEntity httpEntity = httpResponse.getEntity();
             String result = EntityUtils.toString(httpEntity);
-            r = format(result, new ArrayList<>());
+            r = replaceIp(format(result, new ArrayList<>()));
         } catch (ClientProtocolException e) {
             log.error("客户端协议不匹配:" + url);
             e.printStackTrace();
@@ -187,6 +187,16 @@ public class JinShiLiService {
                 }
             }
         }
+        return r;
+    }
+
+    private Result<List> replaceIp(Result<List> r) {
+        List<Map<String, String>> dataList = r.getData();
+        dataList.forEach(item -> {
+            String imageUrl = item.get("image");
+            String newImageUrl = imageUrl.replace("172.24.131.57", "47.108.29.69");
+            item.put("image", newImageUrl);
+        });
         return r;
     }
 }

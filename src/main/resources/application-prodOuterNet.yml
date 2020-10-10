@@ -1,0 +1,49 @@
+server:
+  port: 8888
+#  servlet:
+#    context-path: /sb
+spring:
+  datasource:
+    url: jdbc:mysql://47.108.29.69:40155/smartdb?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&autoReconnectForPools=true&useSSL=false&allowMultiQueries=true
+    username: root
+    password: 123456
+    type: com.alibaba.druid.pool.DruidDataSource
+    driverClassName: com.mysql.cj.jdbc.Driver
+  application:
+    name: smartbuilding
+mybatis:
+  type-aliases-package: com.bz
+  mapper-locations: classpath:mapper/*Mapper.xml
+  config-location: classpath:mybatis-config.xml
+
+car:
+  monitor:
+    history: http://39.108.247.181:8083/back/cd/historyData
+    warning: http://39.108.247.181:8083/back/cd/warningData
+    info: http://39.108.247.181:8083/back/cd/info
+    realtime: http://39.108.247.181:8083/back/cd/realtimeData
+
+zhatubao:
+  username: gaoxin
+  appkey: tr67y8uu
+  appsecret: wdr43ee5y7u44ffg
+  getAuthTokenUrl: http://ticketapi.shomes.cn/api/data/getAuthToken
+  getVehicleInfoUrl: http://ticketapi.shomes.cn/api/data/getVehicleInfo
+  getVehicleStatusurl: http://ticketapi.shomes.cn/api/data/getVehicleStatus
+  getVehicleRecentPic: http://ticketapi.shomes.cn/api/data/getVehicleRecentPic
+  vehicleRecentGps: http://ticketapi.shomes.cn/api/data/getVehicleRecentGps
+
+
+#金时利LED
+#KIMSHL:
+#  netProtocal: 1
+#  typeNo: 41
+#  frontBody: 1
+#  frontSize: 1
+#  frontColor: 1
+#  cardIp: 192.168.2.239
+
+#金时利
+jinshili:
+  carInfo: http://47.108.29.69:18082/park/exitAndEntry
+  barrierGateInfo: http://47.108.29.69:18082/park/gateInfo
