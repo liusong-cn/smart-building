@@ -31,6 +31,8 @@ zhatubao:
   getVehicleInfoUrl: http://ticketapi.shomes.cn/api/data/getVehicleInfo
   getVehicleStatusurl: http://ticketapi.shomes.cn/api/data/getVehicleStatus
   getVehicleRecentPic: http://ticketapi.shomes.cn/api/data/getVehicleRecentPic
+  vehicleRecentGps: http://ticketapi.shomes.cn/api/data/getVehicleRecentGps
+
 
 #金时利LED
 #KIMSHL:
