@@ -83,7 +83,7 @@ public class JinShiLiController {
     }
 
     @GetMapping("/getCarInfo")
-    public Result getCarInfo(@RequestParam(value = "channel",required = true) String channel){
+    public Result<List> getCarInfo(@RequestParam(value = "channel",required = true) String channel){
         if(channel.isEmpty()){
             return new Result<>(-1,"通道号不能为空");
         }
@@ -92,7 +92,7 @@ public class JinShiLiController {
     }
 
     @GetMapping("/getBarrierGateInfo")
-    public Result<String> getBarrierGateInfo(@RequestParam(value = "channel",required = true) String channel){
+    public Result<List> getBarrierGateInfo(@RequestParam(value = "channel",required = true) String channel){
         if(channel.isEmpty()){
             return new Result<>(-1,"通道号不能为空");
         }

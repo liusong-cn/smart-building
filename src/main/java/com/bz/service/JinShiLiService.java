@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -92,8 +93,8 @@ public class JinShiLiService {
      * @param channel
      * @return
      */
-    public Result<String> getCarInfo(String channel){
-        Result<String> r = null;
+    public Result<List> getCarInfo(String channel){
+        Result<List> r = null;
         Map<String,String> paramMap = new HashMap<>();
         paramMap.put("channel",channel);
         String url = joinParams(jinShiLiProperties.getCarInfo(),paramMap);
@@ -104,7 +105,7 @@ public class JinShiLiService {
             httpResponse = httpClient.execute(httpGet);
             HttpEntity httpEntity = httpResponse.getEntity();
             String result = EntityUtils.toString(httpEntity);
-            r = format(result,new String("字符串类型"));
+            r = format(result, new ArrayList<>());
         } catch (ClientProtocolException e) {
             log.error("客户端协议不匹配:" + url);
             e.printStackTrace();
@@ -144,9 +145,9 @@ public class JinShiLiService {
     private <E> Result<E> format(String s, E type){
         JSONObject j = new JSONObject(s);
         Result<E> result = new Result<E>();
-        result.setCode((Integer) j.get("code"));
-        result.setTotal((Integer) j.get("total"));
-        result.setMessage((String) j.get("message"));
+        result.setCode(j.getInt("code"));
+        result.setTotal(j.getInt("total"));
+        result.setMessage(j.getStr("message"));
         E data = (E) j.get("data");
         result.setData(data);
         return result;
@@ -157,8 +158,8 @@ public class JinShiLiService {
      * @param channel
      * @return
      */
-    public Result<String> getBarrierGateInfo(String channel){
-        Result<String> r = null;
+    public Result<List> getBarrierGateInfo(String channel){
+        Result<List> r = null;
         Map<String,String> paramMap = new HashMap<>();
         paramMap.put("channel",channel);
         String url = joinParams(jinShiLiProperties.getBarrierGateInfo(),paramMap);
@@ -169,7 +170,7 @@ public class JinShiLiService {
             httpResponse = httpClient.execute(httpGet);
             HttpEntity httpEntity = httpResponse.getEntity();
             String result = EntityUtils.toString(httpEntity);
-            r = format(result,new String("字符串类型"));
+            r = format(result,new ArrayList<>());
         } catch (ClientProtocolException e) {
             log.error("客户端协议不匹配:" + url);
             e.printStackTrace();
