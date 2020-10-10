@@ -30,3 +30,9 @@ zhatubao:
   getAuthTokenUrl: http://ticketapitest.shomes.cn/api/data/getAuthToken
   getVehicleInfoUrl: http://ticketapitest.shomes.cn/api/data/getVehicleInfo
   getVehicleStatusurl: http://ticketapitest.shomes.cn/api/data/getVehicleStatus
+
+huazhi:
+  corpid: ww49756ef28b994063
+  corpsecret: cBhyIa6LwLbt3wMZAy_JHTQLf1nBlQ1PLDbl5KKfgVM
+  authTokenUrl: http://39.100.155.16:9008/auth/gettoken
+  environmentalAirDataUrl: http://39.100.155.16:9008/environment-monitoring-data-api/v1/air/list
