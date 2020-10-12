@@ -31,6 +31,11 @@ zhatubao:
   getVehicleInfoUrl: http://ticketapi.shomes.cn/api/data/getVehicleInfo
   getVehicleStatusurl: http://ticketapi.shomes.cn/api/data/getVehicleStatus
   getVehicleRecentPic: http://ticketapi.shomes.cn/api/data/getVehicleRecentPic
+huazhi:
+  corpid: ww49756ef28b994063
+  corpsecret: cBhyIa6LwLbt3wMZAy_JHTQLf1nBlQ1PLDbl5KKfgVM
+  authTokenUrl: http://39.100.155.16:9008/auth/gettoken
+  environmentalAirDataUrl: https://dzgtest.palmte.cn/smartws/api/v1/epdata
 
 #金时利
 jinshili:
