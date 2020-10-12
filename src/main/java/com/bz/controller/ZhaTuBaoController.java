@@ -86,4 +86,11 @@ public class ZhaTuBaoController {
         return zhaTuBaoService.queryRecentVehicleGps(plateNo,username,appkey,token,vehicleRecentGps);
     }
 
+    @GetMapping("/getCarInfoMerged")
+    public Result getCarInfoMerged(@RequestParam(value = "plateNo", required = false) String plateNo){
+        log.info("查询中自及渣土宝车辆信息合集");
+        String token = AccessTokenUtil.accessToken.getAccess_token();
+        return zhaTuBaoService.queryCarInfoMerged(plateNo,username,appkey,token,vehicleInfoUrl);
+    }
+
 }
