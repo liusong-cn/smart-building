@@ -29,12 +29,10 @@ public class HuaZhiController {
     private HuazhiService huazhiService;
 
     @GetMapping("/getAirData")
-    public Result<List> getAirData(@RequestParam(value = "stationId") String stationId,
-                                   @RequestParam(value = "startTimeStr") String startTimeStr,
-                                   @RequestParam(value = "endTimeStr") String endTimeStr){
+    public Result<List> getAirData(@RequestParam(value = "wsid") String wsid){
         log.info("查询环境监测数据");
-        String token = AccessTokenUtil.huazhiAccessToken.getAccess_token();
-        return huazhiService.getEnvironmentalAirData(token,stationId,startTimeStr,endTimeStr,environmentalAirDataUrl);
+        //String token = AccessTokenUtil.huazhiAccessToken.getAccess_token();
+        return huazhiService.getEnvironmentalAirData(wsid,environmentalAirDataUrl);
     }
 
 }

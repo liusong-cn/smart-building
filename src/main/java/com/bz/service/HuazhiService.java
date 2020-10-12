@@ -65,30 +65,28 @@ public class HuazhiService {
         return null;
     }
 
-    public Result<List> getEnvironmentalAirData(String token,String stationId, String startTimeStr, String endTimeStr,String airDataUrl){
-        if(token==null){
+    public Result<List> getEnvironmentalAirData(String stationId, String airDataUrl){
+        /*if(token==null){
             token = this.getToken(corpid,corpsecret,authTokenUrl);
-        }
-        String result = getEnvironmentalAirDataByHttp(token,stationId,startTimeStr,endTimeStr,airDataUrl);
-        JSONObject j = new JSONObject(result);
+        }*/
+        String result = getEnvironmentalAirDataByHttp(stationId,airDataUrl);
+        /*JSONObject j = new JSONObject(result);
         if(j.get("message").toString().equals("token无效，请重新获取token")){
             token = this.getToken(corpid,corpsecret,authTokenUrl);
             result = getEnvironmentalAirDataByHttp(token,stationId,startTimeStr,endTimeStr,airDataUrl);
-        }
+        }*/
         return format(result, new ArrayList<>());
     }
 
-    public String getEnvironmentalAirDataByHttp(String token,String stationId, String startTimeStr, String endTimeStr,String airDataUrl){
-        List<Header> headers = new ArrayList<>();
-        headers.add(new BasicHeader("Authorization",token));
-        try(CloseableHttpClient httpClient = HttpClientBuilder.create().setDefaultHeaders(headers).build();
+    public String getEnvironmentalAirDataByHttp(String wsid,String airDataUrl){
+        /*List<Header> headers = new ArrayList<>();
+        headers.add(new BasicHeader("Authorization",token));*/
+        try(CloseableHttpClient httpClient = HttpClientBuilder.create().build();
         ){
 
             CloseableHttpResponse httpResponse = null;
             Map<String,String> params = new HashMap<>();
-            params.put("stationId", stationId);
-            params.put("startTimeStr", startTimeStr);
-            params.put("endTimeStr", endTimeStr);
+            params.put("wsid", wsid);
             String url = joinParams(airDataUrl, params);
             HttpGet httpGet = new HttpGet(url);
             httpResponse = httpClient.execute(httpGet);
@@ -137,7 +135,7 @@ public class HuazhiService {
      * @param <E>
      * @return
      */
-    private <E> Result<E> format(String s, E type){
+    /*private <E> Result<E> format(String s, E type){
         JSONObject j = new JSONObject(s);
         Result<E> result = new Result<E>();
         result.setCode((Integer) j.get("code"));
@@ -148,6 +146,16 @@ public class HuazhiService {
             E data = (E) d.get("list");
             result.setData(data);
         }
+        return result;
+    }*/
+    private <E> Result<E> format(String s, E type){
+        JSONObject j = new JSONObject(s);
+        Result<E> result = new Result<E>();
+        result.setCode((Integer) j.get("code"));
+        result.setTotal((Integer) j.get("total"));
+        result.setMessage((String) j.get("message"));
+        E data = (E) j.get("data");
+        result.setData(data);
         return result;
     }
 
