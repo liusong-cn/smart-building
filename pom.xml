@@ -115,6 +115,15 @@
             <artifactId>httpclient</artifactId>
             <version>4.5.12</version>
         </dependency>
+
+        <!--金时利led显示屏-->
+        <dependency>
+            <groupId>com.qy</groupId>
+            <artifactId>led</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/qyled.jar</systemPath>
+        </dependency>
     </dependencies>
 
     <build>
@@ -123,6 +132,10 @@
                 <!--spring-boot打包插件-->
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <!--打包非maven的jar-->
+                <configuration>
+                    <includeSystemScope>true</includeSystemScope>
+                </configuration>
             </plugin>
         </plugins>
     </build>

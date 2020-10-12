@@ -1,5 +1,6 @@
 package com.bz.controller;
 
+import cn.hutool.core.util.StrUtil;
 import com.bz.common.entity.Result;
 import com.bz.service.ZhaTuBaoService;
 import com.bz.utils.AccessTokenUtil;
@@ -42,6 +43,12 @@ public class ZhaTuBaoController {
     @Value("${zhatubao.getVehicleStatusurl}")
     private String vehicleStatusurl;
 
+    @Value("${zhatubao.getVehicleRecentPic}")
+    private String vehicleRecentPic;
+
+    @Value("${zhatubao.vehicleRecentGps}")
+    private String vehicleRecentGps;
+
     @Resource
     private ZhaTuBaoService zhaTuBaoService;
 
@@ -58,4 +65,25 @@ public class ZhaTuBaoController {
         String token = AccessTokenUtil.accessToken.getAccess_token();
         return zhaTuBaoService.getVehicleInfoAndStatus(username, appkey, token, plateNo, vehicleStatusurl);
     }
+
+    @GetMapping("/getVehicleRecentPic")
+    public Result<List> getVehicleRecentPic(@RequestParam(value = "plateNo", required = true) String plateNo){
+        if(StrUtil.isBlank(plateNo)){
+            return new Result(-1,"车牌号不能为空");
+        }
+        log.info("查询车辆图片信息");
+        String token = AccessTokenUtil.accessToken.getAccess_token();
+        return zhaTuBaoService.getVehicleInfoAndStatus(username, appkey, token, plateNo, vehicleRecentPic);
+    }
+
+    @GetMapping("/getVehicleRecentGps")
+    public Result getVehicleRecentGps(@RequestParam(value = "plateNo",required = true) String plateNo){
+        if(StrUtil.isBlank(plateNo)){
+            return new Result(-1,"车牌号不能为空");
+        }
+        log.info("查询车辆最近一小时轨迹");
+        String token =  AccessTokenUtil.accessToken.getAccess_token();
+        return zhaTuBaoService.queryRecentVehicleGps(plateNo,username,appkey,token,vehicleRecentGps);
+    }
+
 }

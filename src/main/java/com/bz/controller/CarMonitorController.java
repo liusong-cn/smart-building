@@ -5,6 +5,7 @@ import com.bz.service.CarMonitorService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
@@ -24,7 +25,9 @@ public class CarMonitorController {
     private CarMonitorService carMonitorService;
 
     @GetMapping("/historyInfo")
-    public Result<String> historyMonitoringInfo(String carNo,String startDateTime,String endDateTime){
+    public Result<String> historyMonitoringInfo(@RequestParam(value = "carNo",required = true) String carNo,
+                                                @RequestParam(value = "startDateTime",required = true) String startDateTime,
+                                                @RequestParam(value = "endDateTime",required = true) String endDateTime){
         log.info("查询车辆历史信息");
         return carMonitorService.historyMonitoringInfo(carNo,startDateTime,endDateTime);
     }

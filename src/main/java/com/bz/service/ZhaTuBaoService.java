@@ -1,5 +1,6 @@
 package com.bz.service;
 
+import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONObject;
 import com.bz.common.entity.Result;
 import lombok.extern.slf4j.Slf4j;
@@ -57,7 +58,9 @@ public class ZhaTuBaoService {
             params.put("username", username);
             params.put("appkey", appkey);
             params.put("token", token);
-            params.put("plateNo", plateNo);
+            if (plateNo != null && !plateNo.isEmpty()) {
+                params.put("plateNo", plateNo);
+            }
             String url = joinParams(baseUrl, params);
             HttpGet httpGet = new HttpGet(url);
             httpResponse = httpClient.execute(httpGet);
@@ -86,9 +89,6 @@ public class ZhaTuBaoService {
         for (String key:paramMap.keySet()) {
             String value = paramMap.get(key);
             //根据约定以下方"+"号方式处理空格
-//            if(value.contains(" ")){
-//                value = URLEncoder.encode(value);
-//            }
             sb.append(key +"=" + value + "&");
         }
 
@@ -114,6 +114,29 @@ public class ZhaTuBaoService {
         E data = (E) j.get("data");
         result.setData(data);
         return result;
+    }
+
+    private Result httpGet(String url, Map<String, Object> paramMap){
+        String s = HttpUtil.get(url,paramMap);
+        return format(s,new String("字符类型"));
+    }
+
+    /**
+     * 查询车辆最近一小时轨迹
+     * @param plateNo
+     * @param username
+     * @param appkey
+     * @param token
+     * @param url
+     * @return
+     */
+    public Result queryRecentVehicleGps(String plateNo, String username, String appkey, String token,String url){
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("username", username);
+        paramMap.put("appkey", appkey);
+        paramMap.put("token", token);
+        paramMap.put("plateNo",plateNo);
+        return httpGet(url,paramMap);
     }
 
 }
