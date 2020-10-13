@@ -175,9 +175,11 @@ public class ZhaTuBaoService {
         if(!StrUtil.isBlank(plateNo))
             paramMap.put("plateNo",plateNo);
         String s = HttpUtil.get(url,paramMap);
+        log.info("取得渣土宝车辆信息:" + s);
         JSONObject jsonObject = new JSONObject(s);
         //中自车辆实时信息
         String realtimeInfoStr = HttpUtil.get(carMonitorProperties.getRealtime());
+        log.info("取得中自车辆实时信息" + realtimeInfoStr);
         JSONObject realtimeInfoJson = new JSONObject(realtimeInfoStr);
         List<CarRealtimeInfo> carRealtimeInfoList = JSONUtil.toList((JSONArray) realtimeInfoJson.get("data"),CarRealtimeInfo.class);
 

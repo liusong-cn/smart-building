@@ -9,6 +9,7 @@ import com.bz.common.entity.Result;
 import com.bz.common.vo.CarBaseInfo;
 import com.bz.properties.CarMonitorProperties;
 import com.bz.service.CarMonitorService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -21,6 +22,7 @@ import java.util.List;
  * @date: 2020/10/12 14:52
  **/
 @Component
+@Slf4j
 public class CarBaseInfoScheduler {
 
     @Autowired
@@ -29,6 +31,7 @@ public class CarBaseInfoScheduler {
     @Scheduled(fixedRate = 86400000)
     public void carBaseInfoCache(){
         String result = HttpUtil.get(carMonitorProperties.getInfo());
+        log.info("通过定时器取得中自车辆基本信息:" + result);
         JSONObject jsonObject = new JSONObject(result);
         List<CarBaseInfo> carBaseInfoList = JSONUtil.toList((JSONArray) jsonObject.get("data"), CarBaseInfo.class);
         CarBaseInfoCache.setCache(carBaseInfoList);
