@@ -1,26 +1,31 @@
 package com.bz.service;
 
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
 import com.bz.common.entity.Result;
+import com.bz.common.vo.WarningInfo;
 import com.bz.utils.AccessTokenUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author:zy
@@ -38,6 +43,21 @@ public class HuazhiService {
 
     @Value("${huazhi.authTokenUrl}")
     private String authTokenUrl;
+
+    @Value("${huazhi.warning.grant_type}")
+    private String grantType;
+    @Value("${huazhi.warning.client_id}")
+    private String clientId;
+    @Value("${huazhi.warning.client_secret}")
+    private String clientSecret;
+    @Value("${huazhi.warning.user}")
+    private String user;
+    @Value("${huazhi.warning.warningType}")
+    private String warningType;
+    @Value("${huazhi.warning.warningTokenUrl}")
+    private String warningTokenUrl;
+    @Value("${huazhi.warning.warningDataUrl}")
+    private String warningDataUrl;
 
     public String getToken(String corpid, String corpsecret, String authTokenUrl){
         try(CloseableHttpClient httpClient = HttpClientBuilder.create().build();
@@ -65,6 +85,36 @@ public class HuazhiService {
         return null;
     }
 
+    public String getWarningToken(){
+        try(CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+        ){
+            CloseableHttpResponse httpResponse = null;
+            Map<String,String> params = new HashMap<>();
+            params.put("grant_type", grantType);
+            params.put("client_id", clientId);
+            params.put("client_secret", clientSecret);
+            String url = joinParams(warningTokenUrl, params);
+            HttpGet httpGet = new HttpGet(url);
+            httpResponse = httpClient.execute(httpGet);
+            HttpEntity httpEntity = httpResponse.getEntity();
+            String result = EntityUtils.toString(httpEntity);
+            String reg = "access_token=([\\w-]+)&expires_in=";
+            Pattern patten = Pattern.compile(reg);
+            Matcher matcher = patten.matcher(result);
+            String token = null;
+            while (matcher.find()) {
+                token=matcher.group(1);
+                AccessTokenUtil.huazhiAccessWarningToken.setAccess_token(token);
+            }
+            log.info("取得token数据：" + token);
+            return token;
+        } catch (IOException e) {
+            log.error("无法创建httpclient");
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public Result<List> getEnvironmentalAirData(String stationId, String airDataUrl){
         /*if(token==null){
             token = this.getToken(corpid,corpsecret,authTokenUrl);
@@ -79,8 +129,6 @@ public class HuazhiService {
     }
 
     public String getEnvironmentalAirDataByHttp(String wsid,String airDataUrl){
-        /*List<Header> headers = new ArrayList<>();
-        headers.add(new BasicHeader("Authorization",token));*/
         try(CloseableHttpClient httpClient = HttpClientBuilder.create().build();
         ){
 
@@ -92,8 +140,55 @@ public class HuazhiService {
             httpResponse = httpClient.execute(httpGet);
             HttpEntity httpEntity = httpResponse.getEntity();
             String result = EntityUtils.toString(httpEntity);
-            JSONObject j = new JSONObject(result);
             log.info("取得环境监测数据：" + result);
+            return result;
+        } catch (IOException e) {
+            log.error("无法创建httpclient");
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public Result<List> getWarningData(String token,Integer time){
+        if(token==null){
+            token = this.getWarningToken();
+        }
+        String result = getWarningDataByHttp(token,time);
+        JSONObject j = new JSONObject(result);
+        if(j.get("message")!=null && j.get("message").toString().equals("[\"expired_accessToken\"]")){
+            token = this.getWarningToken();
+            result = getWarningDataByHttp(token,time);
+        }
+        return format2(result, new ArrayList<>());
+    }
+
+
+    public String getWarningDataByHttp(String token,Integer time){
+        try(CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+        ){
+
+            if(time==null){
+                time = -10;//默认当前时间减去10s
+            }
+
+            CloseableHttpResponse httpResponse = null;
+            HttpPost httpPost = new HttpPost(warningDataUrl);
+            httpPost.setHeader("Content-Type", "application/json");
+            httpPost.setHeader("Authorization", token);
+            httpPost.setHeader("User", user);
+
+            Date now = DateUtil.date(System.currentTimeMillis());
+            Date start = DateUtil.offsetSecond(now,time);
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("alarm_type_subs",warningType);
+            jsonObject.put("start_time",DateUtil.formatDateTime(start));
+            jsonObject.put("end_time",DateUtil.formatDateTime(now));
+            jsonObject.put("page_size",1000);
+            httpPost.setEntity(new StringEntity(jsonObject.toString()));
+            httpResponse = httpClient.execute(httpPost);
+            HttpEntity httpEntity = httpResponse.getEntity();
+            String result = EntityUtils.toString(httpEntity);
+            log.info("取得告警数据：" + result);
             return result;
         } catch (IOException e) {
             log.error("无法创建httpclient");
@@ -156,6 +251,15 @@ public class HuazhiService {
         result.setMessage((String) j.get("message"));
         E data = (E) j.get("data");
         result.setData(data);
+        return result;
+    }
+
+    private <E> Result<E> format2(String s, E type){
+        JSONObject j = new JSONObject(s);
+        Result<E> result = new Result<E>();
+        result.setTotal((Integer) j.get("total"));
+        List<WarningInfo> warningInfos = JSONUtil.toList(JSONUtil.parseArray(j.get("elements").toString()), WarningInfo.class);
+        result.setData((E) warningInfos);
         return result;
     }
 

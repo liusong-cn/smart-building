@@ -6,4 +6,6 @@ public class AccessTokenUtil {
     public static AccessToken accessToken=new AccessToken();
 
     public static AccessToken huazhiAccessToken=new AccessToken();
+
+    public static AccessToken huazhiAccessWarningToken=new AccessToken();
 }

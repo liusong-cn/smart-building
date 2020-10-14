@@ -38,6 +38,14 @@ huazhi:
   corpsecret: cBhyIa6LwLbt3wMZAy_JHTQLf1nBlQ1PLDbl5KKfgVM
   authTokenUrl: http://39.100.155.16:9008/auth/gettoken
   environmentalAirDataUrl: https://dzgtest.palmte.cn/smartws/api/v1/epdata
+  warning:
+    grant_type: client_credentials
+    client_id: user123
+    client_secret: 123456
+    user: usercode:admin
+    warningType: 1,2,35
+    warningTokenUrl: http://222.209.208.170:11125/sso/oauth2.0/accessToken
+    warningDataUrl: http://222.209.208.170:11125/api/uss/v1/ams/record/alarm/page
 
 #金时利LED
 #KIMSHL:
