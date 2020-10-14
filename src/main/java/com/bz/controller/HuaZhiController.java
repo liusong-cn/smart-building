@@ -37,7 +37,7 @@ public class HuaZhiController {
 
 
     @GetMapping("/getWarningData")
-    public Result<List> getWarningData(@RequestParam(value = "time",required = false)  Integer time){
+    public Result<List> getWarningData(@RequestParam(value = "time",required = false)  Integer time) throws Exception {
         log.info("查询告警信息");
         String token = AccessTokenUtil.huazhiAccessWarningToken.getAccess_token();
         return huazhiService.getWarningData(token,time);

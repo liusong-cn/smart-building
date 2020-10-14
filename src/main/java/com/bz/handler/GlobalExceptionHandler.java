@@ -1,6 +1,7 @@
 package com.bz.handler;
 
 import com.bz.common.entity.Result;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -15,6 +16,7 @@ import java.util.List;
  * @author:ls 自定义全局处理器
  * @date: 2020/9/27 11:39
  **/
+@Slf4j
 @RestControllerAdvice("com.bz.controller")
 public class GlobalExceptionHandler {
 
@@ -25,6 +27,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(BindException.class)
     public Result paramValidationHandler(BindException b){
+        log.info(b.getMessage(),b);
         BindingResult result = b.getBindingResult();
         List<String> msg = new ArrayList<>();
         result.getFieldErrors().stream()
@@ -39,6 +42,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public Result paramExceptionHandler(MethodArgumentNotValidException e){
+        log.info(e.getMessage(),e);
         List<String> messages = new ArrayList<>();
         e.getBindingResult().getFieldErrors()
                 .stream()
@@ -53,6 +57,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(Exception.class)
     public Result ExceptionHandler(Exception e){
+        log.info(e.getMessage(),e);
         return new Result(-1,"error");
     }
 
@@ -63,6 +68,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public Result missingParamExceptionHandler(MissingServletRequestParameterException e){
+        log.info(e.getMessage(),e);
         return new Result(-1,e.getMessage());
     }
 }

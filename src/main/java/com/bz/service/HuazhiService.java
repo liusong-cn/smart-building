@@ -1,6 +1,7 @@
 package com.bz.service;
 
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.json.JSONConfig;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.bz.common.entity.Result;
@@ -19,6 +20,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -149,7 +151,7 @@ public class HuazhiService {
         return null;
     }
 
-    public Result<List> getWarningData(String token,Integer time){
+    public Result<List> getWarningData(String token,Integer time) throws Exception {
         if(token==null){
             token = this.getWarningToken();
         }
@@ -254,13 +256,28 @@ public class HuazhiService {
         return result;
     }
 
-    private <E> Result<E> format2(String s, E type){
+    private <E> Result<E> format2(String s, E type) throws Exception {
         JSONObject j = new JSONObject(s);
         Result<E> result = new Result<E>();
         result.setTotal((Integer) j.get("total"));
         List<WarningInfo> warningInfos = JSONUtil.toList(JSONUtil.parseArray(j.get("elements").toString()), WarningInfo.class);
+        for(WarningInfo warningInfo : warningInfos){
+            reflect(warningInfo);
+        }
+        result.setMessage("success");
         result.setData((E) warningInfos);
         return result;
     }
 
+    public void reflect(WarningInfo e) throws Exception{
+        Class cls = e.getClass();
+        Field[] fields = cls.getDeclaredFields();
+        for(int i=0; i<fields.length; i++){
+            Field f = fields[i];
+            f.setAccessible(true);
+            if(f.get(e)==null){
+                fields[i].set(e,"");
+            }
+        }
+    }
 }
