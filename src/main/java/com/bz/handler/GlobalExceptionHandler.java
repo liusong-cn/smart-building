@@ -9,6 +9,7 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,5 +71,11 @@ public class GlobalExceptionHandler {
     public Result missingParamExceptionHandler(MissingServletRequestParameterException e){
         log.info(e.getMessage(),e);
         return new Result(-1,e.getMessage());
+    }
+
+    @ExceptionHandler
+    public Result unsupportedEncodingHandler(UnsupportedEncodingException e){
+        log.error("编码不支持:"+e.getMessage());
+        return new Result(-1,"编码转换异常");
     }
 }
