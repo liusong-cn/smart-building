@@ -105,6 +105,7 @@ public class JinShiLiService {
             httpResponse = httpClient.execute(httpGet);
             HttpEntity httpEntity = httpResponse.getEntity();
             String result = EntityUtils.toString(httpEntity);
+            log.info("车辆出入场信息:" + result);
             r = replaceIp(format(result, new ArrayList<>()));
         } catch (ClientProtocolException e) {
             log.error("客户端协议不匹配:" + url);
@@ -170,6 +171,7 @@ public class JinShiLiService {
             httpResponse = httpClient.execute(httpGet);
             HttpEntity httpEntity = httpResponse.getEntity();
             String result = EntityUtils.toString(httpEntity);
+            log.info("道闸信息:" +result);
             r = format(result,new ArrayList<>());
         } catch (ClientProtocolException e) {
             log.error("客户端协议不匹配:" + url);

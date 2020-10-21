@@ -1,5 +1,6 @@
 package com.bz.controller;
 
+import cn.hutool.json.JSONObject;
 import com.bz.common.entity.R;
 import com.bz.common.entity.Result;
 import com.bz.common.entity.TbElectricityDataEntity;
@@ -111,15 +112,15 @@ public class JinShiLiController {
      * @return
      */
     @GetMapping("/getRecentMessage")
-    public Result getMessage() throws UnsupportedEncodingException {
+    public String getMessage() throws UnsupportedEncodingException {
         log.info("金时利查询最新大屏消息");
         double pm10 = Double.parseDouble(WeatherUtil.pm10);
         double pm10Limit = Double.parseDouble(weatherProperties.getPm10Limit());
-        System.out.println(pm10Limit);
-        String s = "";
-        if(pm10 >= pm10Limit){
-            s = new String("扬尘超标风险，请立即启用应急措施".getBytes("gbk"),"gb2312");
-        }
-        return new Result(200,s);
+        String s = pm10>=pm10Limit?"扬尘超标风险，请立即启用应急措施":"";
+        JSONObject j = new JSONObject();
+        j.put("code",200);
+        j.put("message",s);
+        String r = new String(j.toString().getBytes("gb2312"),"gb2312");
+        return r;
     }
 }
