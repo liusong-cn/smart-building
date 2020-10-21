@@ -11,12 +11,16 @@ import com.bz.properties.WeatherProperties;
 import com.bz.service.JinShiLiService;
 import com.bz.utils.WeatherUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
@@ -112,7 +116,7 @@ public class JinShiLiController {
      * @return
      */
     @GetMapping("/getRecentMessage")
-    public String getMessage() throws UnsupportedEncodingException {
+    public ResponseEntity getMessage() throws UnsupportedEncodingException {
         log.info("金时利查询最新大屏消息");
         double pm10 = Double.parseDouble(WeatherUtil.pm10);
         double pm10Limit = Double.parseDouble(weatherProperties.getPm10Limit());
@@ -120,7 +124,8 @@ public class JinShiLiController {
         JSONObject j = new JSONObject();
         j.put("code",200);
         j.put("message",s);
-        String r = new String(j.toString().getBytes("gb2312"),"gb2312");
-        return r;
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Type", "text/plain; charset=gb2312");
+        return ResponseEntity.status(200).headers(headers).body(j.toString());
     }
 }
