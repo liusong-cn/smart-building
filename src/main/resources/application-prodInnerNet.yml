@@ -38,6 +38,8 @@ huazhi:
   corpsecret: cBhyIa6LwLbt3wMZAy_JHTQLf1nBlQ1PLDbl5KKfgVM
   authTokenUrl: http://39.100.155.16:9008/auth/gettoken
   environmentalAirDataUrl: https://dzgtest.palmte.cn/smartws/api/v1/epdata
+  weather:
+    pm10Limit: 40
   warning:
     grant_type: client_credentials
     client_id: user123

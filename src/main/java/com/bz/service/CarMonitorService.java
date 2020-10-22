@@ -114,6 +114,7 @@ public class CarMonitorService {
      * @param <E>
      * @return
      */
+    @Deprecated
     private <E> Result<E> format(String s, E type){
         JSONObject j = new JSONObject(s);
         Result<E> result = new Result<E>();
@@ -139,6 +140,7 @@ public class CarMonitorService {
             httpResponse = httpClient.execute(httpGet);
             HttpEntity httpEntity = httpResponse.getEntity();
             String result = EntityUtils.toString(httpEntity);
+            log.info("接收中自的请求结果:" + result);
             r = format(result,new String("字符串类型"));
         } catch (ClientProtocolException e) {
             log.error("客户端协议不匹配:" + url);

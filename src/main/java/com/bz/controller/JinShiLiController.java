@@ -1,19 +1,27 @@
 package com.bz.controller;
 
+import cn.hutool.json.JSONObject;
 import com.bz.common.entity.R;
 import com.bz.common.entity.Result;
 import com.bz.common.entity.TbElectricityDataEntity;
 import com.bz.common.entity.TbWaterPressureEntity;
 import com.bz.mapper.TbElectricityDataMapper;
 import com.bz.mapper.TbWaterPressureMapper;
+import com.bz.properties.WeatherProperties;
 import com.bz.service.JinShiLiService;
-import com.bz.utils.AccessTokenUtil;
+import com.bz.utils.WeatherUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -37,6 +45,9 @@ public class JinShiLiController {
 
     @Resource
     private JinShiLiService jinShiLiService;
+
+    @Autowired
+    private WeatherProperties weatherProperties;
 
     @PostMapping(value = "/pressureCollect", consumes = APPLICATION_JSON_VALUE)
     public Result pressureCollect(@RequestBody TbWaterPressureEntity entity) throws Exception {
@@ -98,5 +109,23 @@ public class JinShiLiController {
         }
         log.info("查询停车场道闸信息");
         return jinShiLiService.getBarrierGateInfo(channel);
+    }
+
+    /**
+     * 供金时利访问最新需要显示在大屏的消息
+     * @return
+     */
+    @GetMapping("/getRecentMessage")
+    public ResponseEntity getMessage() throws UnsupportedEncodingException {
+        log.info("金时利查询最新大屏消息");
+        double pm10 = Double.parseDouble(WeatherUtil.pm10);
+        double pm10Limit = Double.parseDouble(weatherProperties.getPm10Limit());
+        String s = pm10>=pm10Limit?"扬尘超标风险，请立即启用应急措施":"";
+        JSONObject j = new JSONObject();
+        j.put("code",200);
+        j.put("message",s);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Type", "text/plain; charset=gb2312");
+        return ResponseEntity.status(200).headers(headers).body(j.toString());
     }
 }
