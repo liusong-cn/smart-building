@@ -266,6 +266,7 @@ public class HuazhiService {
         }
         result.setMessage("success");
         result.setData((E) warningInfos);
+        log.info("返回可视化数据：" + result);
         return result;
     }
 
