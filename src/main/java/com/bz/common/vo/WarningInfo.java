@@ -35,4 +35,30 @@ public class WarningInfo {
     String sensor_name= "";//传感器名称
     String status= "";//报警处理状态
     String sub_type_chinese_name= "";//报警子类型中文名
+    String biz_map="";//查询结果说明:
+    String orn_date="";// 生日
+    String gender_code="";// 性别
+    String ethic_code="";// 民族
+    String target_feature="";// 布控目标
+    String disposition_name="";// 布控任务
+    String name="";// 姓名
+    String similarity="";// 相似度
+    String id_type="";// 证件种类
+    String id_number="";// 证件号码
+    String biz1 = "";//生日
+    String biz2 = "";//性别 0 未知的性别 1 男性 2 女性 9 未说明的性别
+    String biz3 = "";//民族
+    String biz4 = "";//布控目标
+    String biz5 = "";//布控任务
+    String biz6 = "";//姓名
+    String biz7 = "";//相似度
+    String biz8 = "";//证件种类
+    String biz9 = "";//证件号码
+    String biz10 = "";//
+    String biz11= "";//名单库
+    String biz12 = "";//人脸id
+    String biz13 = "";//省份
+    
+
+
 }
