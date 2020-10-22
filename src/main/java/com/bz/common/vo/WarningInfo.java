@@ -58,7 +58,10 @@ public class WarningInfo {
     String biz11= "";//名单库
     String biz12 = "";//人脸id
     String biz13 = "";//省份
-    
+
+    String part_picture= "";
+    String target_picture="";
+
 
 
 }

@@ -45,7 +45,7 @@ huazhi:
     client_id: user123
     client_secret: 123456
     user: usercode:admin
-    warningType: 1,2,35
+    warningType: 1,2,35,63
     warningTokenUrl: http://222.209.208.170:11125/sso/oauth2.0/accessToken
     warningDataUrl: http://222.209.208.170:11125/api/uss/v1/ams/record/alarm/page
 #金时利LED
