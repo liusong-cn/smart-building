@@ -16,6 +16,13 @@ mybatis:
   mapper-locations: classpath:mapper/*Mapper.xml
   config-location: classpath:mybatis-config.xml
 
+aliyun:
+  sms:
+    sign: 倍智智能数据运营有限公司
+    access-key-id: LTAI4FiKSw1iDQS324qfp4mU
+    access-Key-secret: i8Z59eTYEXVcfFVlt2i9lnwIb6aVwx
+    default-template-code: SMS_205400316
+
 car:
   monitor:
     history: http://39.108.247.181:8083/back/cd/historyData
@@ -45,7 +52,7 @@ huazhi:
     client_id: user123
     client_secret: 123456
     user: usercode:admin
-    warningType: 1,2,35
+    warningType: 1,2,35,63
     warningTokenUrl: http://222.209.208.170:11125/sso/oauth2.0/accessToken
     warningDataUrl: http://222.209.208.170:11125/api/uss/v1/ams/record/alarm/page
 #金时利LED
