@@ -44,7 +44,7 @@ huazhi:
   corpid: ww49756ef28b994063
   corpsecret: cBhyIa6LwLbt3wMZAy_JHTQLf1nBlQ1PLDbl5KKfgVM
   authTokenUrl: http://39.100.155.16:9008/auth/gettoken
-  environmentalAirDataUrl: https://dzgtest.palmte.cn/smartws/api/v1/epdata
+  environmentalAirDataUrl: http://222.209.208.170:9001/smartws/api/v1/epdata
   weather:
     pm10Limit: 40
   warning:
