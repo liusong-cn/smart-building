@@ -23,7 +23,9 @@ public class SendSmsController {
     private SendSmsService sendSmsService;
 
     @PostMapping("sendSms")
-    public Result sendSms(@RequestParam(value = "param",required = false) String param, @RequestParam(value = "phoneNumbers",required = false) String phoneNumbers, @RequestParam(value = "templateCode",required = false) String templateCode){
+    public Result sendSms(@RequestParam(value = "param",required = false) String param,
+                          @RequestParam(value = "phoneNumbers",required = false) String phoneNumbers,
+                          @RequestParam(value = "templateCode",required = false) String templateCode){
         log.info("调用发送短信服务");
         return sendSmsService.sendSms(param,phoneNumbers,templateCode);
     }
