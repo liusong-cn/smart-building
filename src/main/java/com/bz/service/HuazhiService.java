@@ -195,8 +195,8 @@ public class HuazhiService {
         } catch (IOException e) {
             log.error("无法创建httpclient");
             e.printStackTrace();
+            throw new RuntimeException("接口请求超时，请确认厂家系统是否正常");
         }
-        return null;
     }
 
     /**

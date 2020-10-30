@@ -1,5 +1,7 @@
 package com.bz.handler;
 
+import com.aliyuncs.exceptions.ClientException;
+import com.aliyuncs.exceptions.ServerException;
 import com.bz.common.entity.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindException;
@@ -73,9 +75,42 @@ public class GlobalExceptionHandler {
         return new Result(-1,e.getMessage());
     }
 
-    @ExceptionHandler
+    @ExceptionHandler(UnsupportedEncodingException.class)
     public Result unsupportedEncodingHandler(UnsupportedEncodingException e){
         log.error("编码不支持:"+e.getMessage());
         return new Result(-1,"编码转换异常");
+    }
+
+    /**
+     * ali短信服务端异常
+     * @param e
+     * @return
+     */
+    @ExceptionHandler(ServerException.class)
+    public Result serverExceptionHandler(ServerException e){
+        log.error("ali短信服务端异常" + e.getMessage());
+        return new Result(-1,e.getMessage());
+    }
+
+    /**
+     * ali短信服务客户端异常
+     * @param e
+     * @return
+     */
+    @ExceptionHandler(ClientException.class)
+    public Result clientExceptionHandler(ClientException e){
+        log.error("ali短信客户端端异常" + e.getMessage());
+        return new Result(-1,e.getMessage());
+    }
+
+    /**
+     * 运行异常处理
+     * @param e
+     * @return
+     */
+    @ExceptionHandler(RuntimeException.class)
+    public Result runtimeExceptionHandler(RuntimeException e){
+        log.error(String.format("系统运行异常:%s",e.getMessage()));
+        return new Result(-1,e.getMessage());
     }
 }
