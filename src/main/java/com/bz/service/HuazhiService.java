@@ -117,11 +117,11 @@ public class HuazhiService {
         return null;
     }
 
-    public Result<List> getEnvironmentalAirData(String stationId, String airDataUrl){
+    public Result<List> getEnvironmentalAirData(String wsid, String airDataUrl,String stationId){
         /*if(token==null){
             token = this.getToken(corpid,corpsecret,authTokenUrl);
         }*/
-        String result = getEnvironmentalAirDataByHttp(stationId,airDataUrl);
+        String result = getEnvironmentalAirDataByHttp(wsid,airDataUrl,stationId);
         /*JSONObject j = new JSONObject(result);
         if(j.get("message").toString().equals("token无效，请重新获取token")){
             token = this.getToken(corpid,corpsecret,authTokenUrl);
@@ -130,13 +130,16 @@ public class HuazhiService {
         return format(result, new ArrayList<>());
     }
 
-    public String getEnvironmentalAirDataByHttp(String wsid,String airDataUrl){
+    public String getEnvironmentalAirDataByHttp(String wsid,String airDataUrl,String stationId){
         try(CloseableHttpClient httpClient = HttpClientBuilder.create().build();
         ){
 
             CloseableHttpResponse httpResponse = null;
             Map<String,String> params = new HashMap<>();
             params.put("wsid", wsid);
+            if(stationId!=null) {
+                params.put("stationId", stationId);
+            }
             String url = joinParams(airDataUrl, params);
             HttpGet httpGet = new HttpGet(url);
             httpResponse = httpClient.execute(httpGet);
