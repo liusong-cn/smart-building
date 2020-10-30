@@ -83,4 +83,8 @@ public class TbAirDataEntity {
     @ApiModelProperty(value = "三氧化硫")
     @TableField("so3")
     private String so3;
+
+    @ApiModelProperty(value = "二氧化硫")
+    @TableField("so2")
+    private String so2;
 }
