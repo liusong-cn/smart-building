@@ -4,6 +4,7 @@ import com.bz.common.entity.Result;
 import com.bz.service.SendSmsService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,7 +23,7 @@ public class SendSmsController {
     @Autowired
     private SendSmsService sendSmsService;
 
-    @PostMapping("sendSms")
+    @GetMapping("sendSms")
     public Result sendSms(@RequestParam(value = "param",required = false) String param,
                           @RequestParam(value = "phoneNumbers",required = false) String phoneNumbers,
                           @RequestParam(value = "templateCode",required = false) String templateCode){
