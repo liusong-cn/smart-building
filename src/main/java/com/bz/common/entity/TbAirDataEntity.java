@@ -72,4 +72,15 @@ public class TbAirDataEntity {
     @TableField("pressure")
     private String pressure;
 
+    @ApiModelProperty(value = "一氧化碳")
+    @TableField("co")
+    private String co;
+
+    @ApiModelProperty(value = "臭氧")
+    @TableField("o3")
+    private String o3;
+
+    @ApiModelProperty(value = "三氧化硫")
+    @TableField("so3")
+    private String so3;
 }
