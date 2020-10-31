@@ -46,7 +46,7 @@ public class SendSmsService {
             return new Result(-1, "提供的手机号无效");
         }
 
-        String validPhoneNumbers = Stream.of(phoneNumbers.split("[,，]]"))
+        String validPhoneNumbers = Stream.of(phoneNumbers.split("[,，]"))
                 .map(StrUtil::trim)
                 .filter(item -> item.matches("^1\\d{10}$"))
                 .collect(Collectors.joining(","));

@@ -87,4 +87,14 @@ public class TbAirDataEntity {
     @ApiModelProperty(value = "二氧化硫")
     @TableField("so2")
     private String so2;
+
+    @ApiModelProperty(value = "aqi")
+    @TableField("aqi")
+    private String aqi;
+
+    @ApiModelProperty(value = "primaryPollutants")
+    @TableField("primary_pollutants")
+    private String primaryPollutants;
+
+
 }
