@@ -1,3 +1,13 @@
 spring:
   profiles:
     active: prodInnerNet
+  #boot返回前台时间默认使用GMT，相差8小时
+  jackson:
+    time-zone: GMT+8
+#聚光大气数据
+jg:
+  air-data:
+    userName: ceshi
+    password: 20db458205790ee27a5e1fd52a33edc8
+    stationCodes: CEG41910135*
+    dataMinUrl: http://119.3.48.160/agms-prj-server/api/v1/web/outside/site-real-data

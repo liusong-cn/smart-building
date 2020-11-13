@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bz.mapper.JGAirDataMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.bz.common.entity.JGAirData">
+        <result column="id" property="id" />
+        <result column="O3" property="O3"/>
+        <result column="CO" property="CO"/>
+        <result column="NO2" property="NO2"/>
+        <result column="SO2" property="SO2"/>
+        <result column="AQI" property="AQI"/>
+        <result column="WD" property="WD"/>
+        <result column="WS" property="WS"/>
+        <result column="PM10" property="PM10"/>
+        <result column="PM25" property="PM25"/>
+        <result column="RH" property="RH"/>
+        <result column="TEMP" property="TEMP"/>
+        <result column="StationCode" property="StationCode"/>
+        <result column="PointName" property="PointName"/>
+        <result column="Latitude" property="Latitude"/>
+        <result column="TVOC" property="TVOC"/>
+        <result column="time" property="time"/>
+    </resultMap>
+    <select id="recentAirData" resultType="com.bz.common.entity.JGAirData">
+        SELECT a.* FROM `jg_air_data` a INNER JOIN
+        (select j.StationCode,MAX(j.TIME) time from jg_air_data j GROUP BY j.StationCode) b
+        where a.StationCode = b.StationCode and a.TIME = b.time
+        <if test="stationCode != null and stationCode != ''">
+            and a.StationCode = #{stationCode}
+        </if>
+    </select>
+
+    <select id="airDataHistory" resultType="com.bz.common.entity.JGAirData">
+        select a.* from jg_air_data a where a.StationCode = #{stationCode} order by a.TIME desc limit #{offset},#{size}
+    </select>
+
+
+</mapper>
