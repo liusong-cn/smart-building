@@ -3,9 +3,15 @@ package com.bz.service;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
 import com.bz.common.entity.JGAirData;
+import com.bz.common.entity.R;
+import com.bz.common.entity.Result;
+import com.bz.exception.StringEmptyException;
 import com.bz.mapper.JGAirDataMapper;
 import com.bz.properties.JGAirDataProperties;
 import com.bz.proxy.HttpUtil;
@@ -27,6 +33,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author:ls
@@ -121,13 +128,74 @@ public class JGAirDataService {
         return r;
     }
 
+    public String getHourAirData(String stationCode, String time){
+        Map<String,Object> paramMap = new HashMap<>();
+        paramMap.put("UserName",airDataProperties.getUserName());
+        paramMap.put("Password",airDataProperties.getPassword());
+        paramMap.put("StationCode",stationCode);
+        paramMap.put("Time",time);
+        try {
+            String r = HttpUtil.httpGet(airDataProperties.getDataHourUrl(),paramMap);
+            log.info("获取到聚光小时大气数据：" + r);
+            String s = transformHourData(r);
+            return new Result<>(R.SUCCESS,s,1).toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+            log.info("获取聚光小时大气数据超时：" + e.getMessage());
+            return new Result<>(-1,e.getMessage()).toString();
+        }
+    }
+
+    public String getHourAirDatas(String stationCode, String startTime, String endTime){
+        Map<String,Object> paramMap = new HashMap<>();
+        paramMap.put("UserName",airDataProperties.getUserName());
+        paramMap.put("Password",airDataProperties.getPassword());
+        paramMap.put("StationCode",stationCode);
+        paramMap.put("StartTime",startTime);
+        paramMap.put("EndTime",endTime);
+        try {
+            String r = HttpUtil.httpGet(airDataProperties.getDatasHourUrl(),paramMap);
+            log.info("获取到聚光多条小时大气数据：" + r);
+            String s = transformHourDatas(r);
+            int total = Integer.valueOf(s.substring(0,s.indexOf("&")));
+            String realData = s.substring(s.indexOf("&") + 1);
+            return new Result<>(R.SUCCESS,realData,total).toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+            log.info("获取聚光多条小时大气数据超时：" + e.getMessage());
+            return new Result<>(-1,e.getMessage()).toString();
+        }
+    }
+
+    private String transformHourData(String str){
+        JSONObject j = new JSONObject(str);
+        JSONObject innerJ = new JSONObject(j.get("Content"));
+        if(ObjectUtil.isEmpty(innerJ)){
+            throw new StringEmptyException("聚光大气数据为空：" + str);
+        }
+        innerJ.remove("_id");
+        innerJ.remove("MAIN_POLLUTANTS");
+        return JSONUtil.toJsonStr(innerJ);
+    }
+
+    private String transformHourDatas(String str){
+        JSONObject j = new JSONObject(str);
+        JSONArray array = new JSONArray(j.get("Content"));
+        if(ObjectUtil.isEmpty(array)){
+            throw new StringEmptyException("聚光小时多条大气数据为空：" + str);
+        }
+        List array1 = array.stream().map((obj)->{
+            JSONObject jo = new JSONObject(obj);
+            jo.remove("_id");
+            jo.remove("MAIN_POLLUTANTS");
+            return jo;
+        }).collect(Collectors.toList());
+        return array.size() + "&" +JSONUtil.toJsonStr(array1);
+    }
+
 //    public static void main(String[] args) throws ParseException {
-//        SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmm");
-//        String s = format.format(new Date());
-//        System.out.println(format.parse("2020-20-20 41:33:22"));
-//        HashMap<String, Object> paramMap = new HashMap<>();
-//        paramMap.put("UserName", "%s");
-//        String r = HttpUtil.joinParams("/abc", paramMap);
-//        System.out.println(String.format(r, "xxx"));
+//        String s = "12&codedddd&";
+//        int i = Integer.valueOf(s.substring(0,s.indexOf("&")));
+//        System.out.println(i);
 //    }
 }

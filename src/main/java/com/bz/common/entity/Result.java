@@ -56,4 +56,9 @@ public class Result<V> implements Serializable {
     }
 
 
+    @Override
+    public String toString(){
+        return String.format("{\"code\": %s,\"message\":\"%s\",\"total\":%s,\"data\":%s}",
+                getCode(),getMessage(),getTotal(),getData());
+    }
 }

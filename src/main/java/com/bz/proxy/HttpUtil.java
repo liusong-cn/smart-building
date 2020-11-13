@@ -4,9 +4,15 @@ import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicHeader;
+import org.apache.http.util.EntityUtils;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
@@ -81,5 +87,18 @@ public class HttpUtil {
             });
         }
         return joinParams(url,paramMap);
+    }
+
+    public static String httpGet(String url) throws IOException {
+        return httpGet(url,null);
+    }
+
+    public static String httpGet(String url,Map<String,Object> paramMap) throws IOException {
+        String urlConcat = HttpUtil.joinParams(url,paramMap);
+        try(CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {
+            HttpGet httpGet = new HttpGet(urlConcat);
+            CloseableHttpResponse httpResponse = httpClient.execute(httpGet);
+            return EntityUtils.toString(httpResponse.getEntity());
+        }
     }
 }

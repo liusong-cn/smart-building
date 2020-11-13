@@ -11,3 +11,5 @@ jg:
     password: 20db458205790ee27a5e1fd52a33edc8
     stationCodes: CEG41910135*
     dataMinUrl: http://119.3.48.160/agms-prj-server/api/v1/web/outside/site-real-data
+    dataHourUrl: http://119.3.48.160/agms-prj-server/api/v1/web/outside/get-site-hours-data
+    datasHourUrl: http://119.3.48.160/agms-prj-server/api/v1/web/outside/get-site-hours-data-time

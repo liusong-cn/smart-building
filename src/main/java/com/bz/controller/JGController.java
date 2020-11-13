@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -41,5 +42,20 @@ public class JGController {
         log.info("查询聚光大气历史数据");
         List<JGAirData> data = airDataService.queryHistoryAirData(stationCode,pageSize,pageNo);
         return new Result(R.SUCCESS,data,data.size());
+    }
+
+    @GetMapping("/getHourAirData")
+    public String getHourAirData(@RequestParam(value = "time",required = true) String time,
+                                 @RequestParam(value = "stationCode",required = true)String stationCode){
+        log.info("查询聚光单条小时数据");
+        return airDataService.getHourAirData(stationCode,time);
+    }
+
+    @GetMapping("/getHourAirDatas")
+    public String getHourAirDatas(@RequestParam(value = "startTime",required = true) String startTime,
+                                  @RequestParam(value = "stationCode",required = true)String stationCode,
+                                  @RequestParam(value = "endTime",required = true) String endTime){
+        log.info("查询聚光多条小时数据");
+        return airDataService.getHourAirDatas(stationCode,startTime,endTime);
     }
 }

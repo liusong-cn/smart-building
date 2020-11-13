@@ -24,4 +24,10 @@ public class JGAirDataProperties {
     //每分钟单条数据接口url
     private String dataMinUrl;
 
+    //小时单条数据接口url
+    private String dataHourUrl;
+
+    //小时时间段数据接口url
+    private String datasHourUrl;
+
 }
