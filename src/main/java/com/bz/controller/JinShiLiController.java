@@ -27,12 +27,17 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 /**
  * 汽车监控
+ *
  * @author:zy
  * @date: 2020/10/03 11:02
  **/
@@ -78,39 +83,41 @@ public class JinShiLiController {
 
     /**
      * 可视化侧获取水压采集设备信息
+     *
      * @param deviceCode
      * @return
      */
     @GetMapping("/getPressureInfo")
-    public Result getPressureInfo(@RequestParam(value = "deviceCode", required = true) String deviceCode){
+    public Result getPressureInfo(@RequestParam(value = "deviceCode", required = true) String deviceCode) {
         log.info("查询水压采集设备信息");
         return jinShiLiService.getPressureInfo(deviceCode);
     }
 
     /**
      * 可视化侧获取电流采集设备信息
+     *
      * @param deviceCode
      * @return
      */
     @GetMapping("/getElectricityInfo")
-    public Result<List> getElectricityInfo(@RequestParam(value = "deviceCode", required = true) String deviceCode){
+    public Result<List> getElectricityInfo(@RequestParam(value = "deviceCode", required = true) String deviceCode) {
         log.info("查询电流采集设备信息");
         return jinShiLiService.getElectricityInfo(deviceCode);
     }
 
     @GetMapping("/getCarInfo")
-    public Result<List> getCarInfo(@RequestParam(value = "channel",required = true) String channel){
-        if(channel.isEmpty()){
-            return new Result<>(-1,"通道号不能为空");
+    public Result<List> getCarInfo(@RequestParam(value = "channel", required = true) String channel) {
+        if (channel.isEmpty()) {
+            return new Result<>(-1, "通道号不能为空");
         }
         log.info("查询车辆最近出入场信息");
         return jinShiLiService.getCarInfo(channel);
     }
 
     @GetMapping("/getBarrierGateInfo")
-    public Result<List> getBarrierGateInfo(@RequestParam(value = "channel",required = true) String channel){
-        if(channel.isEmpty()){
-            return new Result<>(-1,"通道号不能为空");
+    public Result<List> getBarrierGateInfo(@RequestParam(value = "channel", required = true) String channel) {
+        if (channel.isEmpty()) {
+            return new Result<>(-1, "通道号不能为空");
         }
         log.info("查询停车场道闸信息");
         return jinShiLiService.getBarrierGateInfo(channel);
@@ -118,6 +125,7 @@ public class JinShiLiController {
 
     /**
      * 供金时利访问最新需要显示在大屏的消息
+     *
      * @return
      */
     @GetMapping("/getRecentMessage")
@@ -125,10 +133,10 @@ public class JinShiLiController {
         log.info("金时利查询最新大屏消息");
         double pm10 = Double.parseDouble(WeatherUtil.pm10);
         double pm10Limit = Double.parseDouble(weatherProperties.getPm10Limit());
-        String s = pm10>=pm10Limit?"扬尘超标风险，请立即启用应急措施":"";
+        String s = pm10 >= pm10Limit ? "扬尘超标风险，请立即启用应急措施" : "";
         JSONObject j = new JSONObject();
-        j.put("code",200);
-        j.put("message",s);
+        j.put("code", 200);
+        j.put("message", s);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "text/plain; charset=gb2312");
         return ResponseEntity.status(200).headers(headers).body(j.toString());
@@ -136,47 +144,57 @@ public class JinShiLiController {
 
     /**
      * 金时利推送车辆入场
+     *
      * @param carIn
      * @return
      */
-    @PostMapping(value = "/carIn",consumes = APPLICATION_JSON_VALUE)
-    public ParkingInfo carIn(@RequestBody CarIn carIn){
+    @PostMapping(value = "/carIn", consumes = APPLICATION_JSON_VALUE)
+    public ParkingInfo carIn(@RequestBody CarIn carIn) {
         log.info("接收金时利车辆入场信息");
         String plateNumber = carIn.getPlatenumber();
-        if(StrUtil.isEmpty(plateNumber)){
-            return ParkingInfo.error().setMsg("车牌号为空");
+        String enterTime = carIn.getEntertime();
+        if (StrUtil.isNotEmpty(plateNumber) && StrUtil.isNotEmpty(enterTime)) {
+            CarInfoCache.StorePlateNoIn(plateNumber);
+            //截取月日 时分
+            CarInfoCache.StoreEnterTime(enterTime.substring(5,16));
+            return ParkingInfo.success();
+
         }
-        CarInfoCache.StorePlateNoIn(plateNumber);
-        return ParkingInfo.success();
+        return ParkingInfo.error().setMsg("车牌号或时间为空");
     }
 
     /**
      * 金时利推送车辆出场
+     *
      * @param carOut
      * @return
      */
-    @PostMapping(value = "/carOut",consumes = APPLICATION_JSON_VALUE)
-    public ParkingInfo carOut(@RequestBody CarOut carOut){
-        log.info("接收金时利车辆入场信息");
+    @PostMapping(value = "/carOut", consumes = APPLICATION_JSON_VALUE)
+    public ParkingInfo carOut(@RequestBody CarOut carOut) {
+        log.info("接收金时利车辆出场信息");
         String plateNumber = carOut.getPlatenumber();
-        if(StrUtil.isEmpty(plateNumber)){
-            return ParkingInfo.error().setMsg("车牌号为空");
+        String leaveTime = carOut.getLeavetime();
+        if (StrUtil.isNotEmpty(plateNumber) && StrUtil.isNotEmpty(leaveTime)) {
+            CarInfoCache.StorePlateNoIn(plateNumber);
+            //截取月日 时分
+            CarInfoCache.StoreLeaveTime(leaveTime.substring(5,16));
+            return ParkingInfo.success();
+
         }
-        CarInfoCache.StorePlateNoOut(plateNumber);
-        return ParkingInfo.success();
+        return ParkingInfo.error().setMsg("车牌号或时间为空");
     }
 
     @GetMapping("/showCar")
-    public ResponseEntity showCar(@RequestParam(value = "type",required = true) String type){
+    public ResponseEntity showCar(@RequestParam(value = "type", required = true) String type) {
         String s;
-        if(type.equals("in")){
-            s = String.format("入场车牌:%s",CarInfoCache.getPlateNoIn());
-        }else {
-            s = String.format("出场车牌:%s",CarInfoCache.getPlateNoOut());
+        if (type.equals("in")) {
+            s = String.format("入场车牌:%s,时间:%s", CarInfoCache.getPlateNoIn(),CarInfoCache.getEnterTime());
+        } else {
+            s = String.format("出场车牌:%s,时间:%s", CarInfoCache.getPlateNoOut(),CarInfoCache.getLeaveTime());
         }
         JSONObject j = new JSONObject();
-        j.put("code",200);
-        j.put("message",s);
+        j.put("code", 200);
+        j.put("message", s);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "text/plain; charset=gb2312");
         return ResponseEntity.status(200).headers(headers).body(j.toString());

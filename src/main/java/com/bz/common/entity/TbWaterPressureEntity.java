@@ -44,6 +44,40 @@ public class TbWaterPressureEntity {
     @TableField("sampleKPa4")
     private Float sampleKPa4;
 
+    @ApiModelProperty(value = "采样值5")
+    @TableField("sampleKPa5")
+    private Float sampleKPa5;
+
+    @ApiModelProperty(value = "采样值6")
+    @TableField("sampleKPa6")
+    private Float sampleKPa6;
+
+    @ApiModelProperty(value = "采样值7")
+    @TableField("sampleKPa7")
+    private Float sampleKPa7;
+
+    @ApiModelProperty(value = "采样值8")
+    @TableField("sampleKPa8")
+    private Float sampleKPa8;
+
+    @ApiModelProperty(value = "采样值9")
+    @TableField("sampleKPa9")
+    private Float sampleKPa9;
+
+    @ApiModelProperty(value = "采样值10")
+    @TableField("sampleKPa10")
+    private Float sampleKPa10;
+
+    @ApiModelProperty(value = "采样值11")
+    @TableField("sampleKPa11")
+    private Float sampleKPa11;
+
+    @ApiModelProperty(value = "采样值12")
+    @TableField("sampleKPa12")
+    private Float sampleKPa12;
+
+
+
     @ApiModelProperty(value = "采样时间")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss")
     @TableField("sampleTime")
