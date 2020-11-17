@@ -19,7 +19,7 @@ public class JGAirDataScheduler {
      * 获取每分钟大气数据
      * cron 每分钟执行一次
      */
-    @Scheduled(cron = "0 */1 * * * ?")
+    @Scheduled(cron = "59 */1 * * * ?")
     public void airDataMinute(){
         airDataService.httpAirData();
     }
