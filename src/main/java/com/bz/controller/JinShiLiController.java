@@ -1,10 +1,15 @@
 package com.bz.controller;
 
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
+import com.bz.cache.CarInfoCache;
+import com.bz.common.entity.CarIn;
+import com.bz.common.entity.CarOut;
 import com.bz.common.entity.R;
 import com.bz.common.entity.Result;
 import com.bz.common.entity.TbElectricityDataEntity;
 import com.bz.common.entity.TbWaterPressureEntity;
+import com.bz.common.vo.ParkingInfo;
 import com.bz.mapper.TbElectricityDataMapper;
 import com.bz.mapper.TbWaterPressureMapper;
 import com.bz.properties.WeatherProperties;
@@ -128,4 +133,53 @@ public class JinShiLiController {
         headers.add("Content-Type", "text/plain; charset=gb2312");
         return ResponseEntity.status(200).headers(headers).body(j.toString());
     }
+
+    /**
+     * 金时利推送车辆入场
+     * @param carIn
+     * @return
+     */
+    @PostMapping(value = "/carIn",consumes = APPLICATION_JSON_VALUE)
+    public ParkingInfo carIn(@RequestBody CarIn carIn){
+        log.info("接收金时利车辆入场信息");
+        String plateNumber = carIn.getPlatenumber();
+        if(StrUtil.isEmpty(plateNumber)){
+            return ParkingInfo.error().setMsg("车牌号为空");
+        }
+        CarInfoCache.StorePlateNoIn(plateNumber);
+        return ParkingInfo.success();
+    }
+
+    /**
+     * 金时利推送车辆出场
+     * @param carOut
+     * @return
+     */
+    @PostMapping(value = "/carOut",consumes = APPLICATION_JSON_VALUE)
+    public ParkingInfo carOut(@RequestBody CarOut carOut){
+        log.info("接收金时利车辆入场信息");
+        String plateNumber = carOut.getPlatenumber();
+        if(StrUtil.isEmpty(plateNumber)){
+            return ParkingInfo.error().setMsg("车牌号为空");
+        }
+        CarInfoCache.StorePlateNoOut(plateNumber);
+        return ParkingInfo.success();
+    }
+
+    @GetMapping("/showCar")
+    public ResponseEntity showCar(@RequestParam(value = "type",required = true) String type){
+        String s;
+        if(type.equals("in")){
+            s = String.format("入场车牌:%s",CarInfoCache.getPlateNoIn());
+        }else {
+            s = String.format("出场车牌:%s",CarInfoCache.getPlateNoOut());
+        }
+        JSONObject j = new JSONObject();
+        j.put("code",200);
+        j.put("message",s);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Type", "text/plain; charset=gb2312");
+        return ResponseEntity.status(200).headers(headers).body(j.toString());
+    }
+
 }

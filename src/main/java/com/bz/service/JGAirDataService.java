@@ -75,11 +75,12 @@ public class JGAirDataService {
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmm");
         Date now = new Date();
         String time = format.format(now);
+        String timeDelay = String.valueOf(Long.valueOf(time) -2);
 
         HashMap<String, Object> paramMap = new HashMap<>();
         paramMap.put("UserName", airDataProperties.getUserName());
         paramMap.put("Password", airDataProperties.getPassword());
-        paramMap.put("Time", time);
+        paramMap.put("Time", timeDelay);
         paramMap.put("StationCode", "%s");
         String url = HttpUtil.joinParams(airDataProperties.getDataMinUrl(), paramMap);
 
@@ -194,8 +195,10 @@ public class JGAirDataService {
     }
 
 //    public static void main(String[] args) throws ParseException {
-//        String s = "12&codedddd&";
-//        int i = Integer.valueOf(s.substring(0,s.indexOf("&")));
-//        System.out.println(i);
+//        SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmm");
+//        Date now = new Date();
+//        String time = format.format(now);
+//        String timeDelay = String.valueOf(Long.valueOf(time) -2);
+//        System.out.println(time + "----"+timeDelay);
 //    }
 }
