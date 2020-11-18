@@ -3,6 +3,7 @@ package com.bz.controller;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
 import com.bz.cache.CarInfoCache;
+import com.bz.cache.CommonCache;
 import com.bz.common.entity.CarIn;
 import com.bz.common.entity.CarOut;
 import com.bz.common.entity.R;
@@ -154,9 +155,11 @@ public class JinShiLiController {
         String plateNumber = carIn.getPlatenumber();
         String enterTime = carIn.getEntertime();
         if (StrUtil.isNotEmpty(plateNumber) && StrUtil.isNotEmpty(enterTime)) {
-            CarInfoCache.StorePlateNoIn(plateNumber);
+//            CarInfoCache.StorePlateNoIn(plateNumber);
+            CommonCache.getInstance().put("plateNoIn",plateNumber);
             //截取月日 时分
-            CarInfoCache.StoreEnterTime(enterTime.substring(5,16));
+//            CarInfoCache.StoreEnterTime(enterTime.substring(5,16));
+            CommonCache.getInstance().put("enterTime",enterTime.substring(5,16));
             return ParkingInfo.success();
 
         }
@@ -175,9 +178,11 @@ public class JinShiLiController {
         String plateNumber = carOut.getPlatenumber();
         String leaveTime = carOut.getLeavetime();
         if (StrUtil.isNotEmpty(plateNumber) && StrUtil.isNotEmpty(leaveTime)) {
-            CarInfoCache.StorePlateNoIn(plateNumber);
+//            CarInfoCache.StorePlateNoIn(plateNumber);
+            CommonCache.getInstance().put("plateNoOut",plateNumber);
             //截取月日 时分
-            CarInfoCache.StoreLeaveTime(leaveTime.substring(5,16));
+//            CarInfoCache.StoreLeaveTime(leaveTime.substring(5,16));
+            CommonCache.getInstance().put("leaveTime",leaveTime.substring(5,16));
             return ParkingInfo.success();
 
         }
@@ -188,9 +193,13 @@ public class JinShiLiController {
     public ResponseEntity showCar(@RequestParam(value = "type", required = true) String type) {
         String s;
         if (type.equals("in")) {
-            s = String.format("入场车牌:%s,时间:%s", CarInfoCache.getPlateNoIn(),CarInfoCache.getEnterTime());
+//            s = String.format("入场车牌:%s,时间:%s", CarInfoCache.getPlateNoIn(),CarInfoCache.getEnterTime());
+            s = String.format("入场车牌:%s,时间:%s",CommonCache.getInstance().get("plateNoIn"),
+                    CommonCache.getInstance().get("enterTime"));
         } else {
-            s = String.format("出场车牌:%s,时间:%s", CarInfoCache.getPlateNoOut(),CarInfoCache.getLeaveTime());
+//            s = String.format("出场车牌:%s,时间:%s", CarInfoCache.getPlateNoOut(),CarInfoCache.getLeaveTime());
+            s = String.format("出场车牌:%s,时间:%s",CommonCache.getInstance().get("plateNoOut"),
+                    CommonCache.getInstance().get("leaveTime"));
         }
         JSONObject j = new JSONObject();
         j.put("code", 200);

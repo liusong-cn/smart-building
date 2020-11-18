@@ -7,6 +7,7 @@ import lombok.Data;
  * @date: 2020/11/16 20:04
  * 金时利车辆出入场车牌缓存
  **/
+@Deprecated
 public class CarInfoCache {
 
     //入场车牌
