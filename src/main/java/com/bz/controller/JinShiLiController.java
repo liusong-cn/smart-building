@@ -194,11 +194,11 @@ public class JinShiLiController {
         String s;
         if (type.equals("in")) {
 //            s = String.format("入场车牌:%s,时间:%s", CarInfoCache.getPlateNoIn(),CarInfoCache.getEnterTime());
-            s = String.format("入场车牌:%s,时间:%s",CommonCache.getInstance().get("plateNoIn"),
+            s = String.format("入场车牌:%s,入场时间:%s",CommonCache.getInstance().get("plateNoIn"),
                     CommonCache.getInstance().get("enterTime"));
         } else {
 //            s = String.format("出场车牌:%s,时间:%s", CarInfoCache.getPlateNoOut(),CarInfoCache.getLeaveTime());
-            s = String.format("出场车牌:%s,时间:%s",CommonCache.getInstance().get("plateNoOut"),
+            s = String.format("出场车牌:%s,出场时间:%s",CommonCache.getInstance().get("plateNoOut"),
                     CommonCache.getInstance().get("leaveTime"));
         }
         JSONObject j = new JSONObject();
