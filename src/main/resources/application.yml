@@ -9,7 +9,7 @@ jg:
   air-data:
     userName: chengdu
     password: 924713836750bf25ab10b409682bccd0
-    stationCodes: CEG42080014*,CEG42080031*,CEG217C0257*
+    stationCodes: CEG420B0066*,CEG420B0069*,CEG420B0008*
     dataMinUrl: http://119.3.48.160/agms-prj-server/api/v1/web/outside/site-real-data
     dataHourUrl: http://119.3.48.160/agms-prj-server/api/v1/web/outside/get-site-hours-data
     datasHourUrl: http://119.3.48.160/agms-prj-server/api/v1/web/outside/get-site-hours-data-time
