@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: prodInnerNet
+    active: dev
   #boot返回前台时间默认使用GMT，相差8小时
   jackson:
     time-zone: GMT+8
@@ -13,3 +13,7 @@ jg:
     dataMinUrl: http://119.3.48.160/agms-prj-server/api/v1/web/outside/site-real-data
     dataHourUrl: http://119.3.48.160/agms-prj-server/api/v1/web/outside/get-site-hours-data
     datasHourUrl: http://119.3.48.160/agms-prj-server/api/v1/web/outside/get-site-hours-data-time
+# 成都市控站大气
+chengdu:
+  airdata:
+    url: http://118.116.8.14:8080/apigateway/data/publish/DefaultHandler?action=GetRealTimeData&_=
