@@ -71,6 +71,10 @@ public class JGAirData {
     @TableField("Latitude")
     private String Latitude;
 
+    @ApiModelProperty(value = "经度")
+    @TableField("Longitude")
+    private String Longitude;
+
     @TableField("StationCode")
     @ApiModelProperty(value = "站点")
     private String StationCode;

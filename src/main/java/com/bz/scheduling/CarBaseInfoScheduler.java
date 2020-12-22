@@ -28,6 +28,9 @@ public class CarBaseInfoScheduler {
     @Autowired
     private CarMonitorProperties carMonitorProperties;
 
+    @Autowired
+    private CarMonitorService carMonitorService;
+
     @Scheduled(fixedRate = 86400000)
     public void carBaseInfoCache(){
         String result = HttpUtil.get(carMonitorProperties.getInfo());
@@ -36,4 +39,24 @@ public class CarBaseInfoScheduler {
         List<CarBaseInfo> carBaseInfoList = JSONUtil.toList((JSONArray) jsonObject.get("data"), CarBaseInfo.class);
         CarBaseInfoCache.setCache(carBaseInfoList);
     }
+
+    /**
+     * 每小时执行一次
+     */
+    @Scheduled(cron = "0 0 * * * ?")
+    public void saveCarRealtimeInfo(){
+        log.info("通过定时器保存中自车辆实时信息");
+        carMonitorService.saveRealtimeInfo();
+    }
+
+    /**
+     * 每天一次
+     */
+    @Scheduled(fixedRate = 86400000L)
+    public void saveCarBaseInfo(){
+        log.info("通过定时器保存车辆基本信息");
+        carMonitorService.saveBaseInfo();
+    }
+
+
 }

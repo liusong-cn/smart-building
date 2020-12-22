@@ -1,7 +1,12 @@
 package com.bz.service;
 
+import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import com.bz.common.entity.Result;
+import com.bz.common.entity.ZZCarBaseInfo;
+import com.bz.common.entity.ZZCarRealtimeInfo;
+import com.bz.mapper.ZZCarBaseInfoMapper;
+import com.bz.mapper.ZZCarRealtimeInfoMapper;
 import com.bz.properties.CarMonitorProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpEntity;
@@ -14,9 +19,10 @@ import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.io.IOException;
-import java.net.URLEncoder;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -33,6 +39,12 @@ public class CarMonitorService {
     //采用properties文件集中管理
     @Autowired
     private CarMonitorProperties carMonitorProperties;
+
+    @Resource
+    private ZZCarRealtimeInfoMapper realtimeInfoMapper;
+
+    @Resource
+    private ZZCarBaseInfoMapper baseInfoMapper;
 
 
     public Result<String> historyMonitoringInfo(String carNo, String startDateTime, String endDateTime){
@@ -159,5 +171,34 @@ public class CarMonitorService {
             }
         }
         return r;
+    }
+
+    /**
+     * 保存车辆实时信息
+     */
+    public void saveRealtimeInfo(){
+        Result r = httpGet(carMonitorProperties.getRealtime());
+        JSONObject jsonObject = new JSONObject(r);
+        JSONArray array = jsonObject.getJSONArray("data");
+        List<ZZCarRealtimeInfo> zzCarRealtimeInfos = array.toList(ZZCarRealtimeInfo.class);
+        for (ZZCarRealtimeInfo zzCarRealtimeInfo : zzCarRealtimeInfos) {
+            realtimeInfoMapper.insert(zzCarRealtimeInfo);
+        }
+        log.info("保存中自车辆实时信息成功");
+    }
+
+    /**
+     * 保存车联基本信息
+     */
+    public void saveBaseInfo(){
+        Result r = carsInfo();
+        JSONObject jsonObject = new JSONObject(r);
+        JSONArray array = jsonObject.getJSONArray("data");
+        List<ZZCarBaseInfo> baseInfos = array.toList(ZZCarBaseInfo.class);
+        List<ZZCarBaseInfo> infos = baseInfoMapper.selectList(null);
+        baseInfos.stream().filter(baseInfo ->{
+            return !infos.contains(baseInfo);
+        }).forEach(baseInfo -> baseInfoMapper.insert(baseInfo));
+        log.info("保存中自车辆基本信息成功");
     }
 }

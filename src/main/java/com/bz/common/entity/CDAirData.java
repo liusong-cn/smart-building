@@ -1,5 +1,6 @@
 package com.bz.common.entity;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -15,7 +16,7 @@ import java.util.Date;
 @TableName("cd_airdata")
 public class CDAirData {
 
-    @TableField("id")
+    @TableId("id")
     private long id;
 
     @TableField("MN")
@@ -87,7 +88,7 @@ public class CDAirData {
     @TableField("CO_1H")
     private String CO_1H;
 
-    @TableField("create_time")
+    @TableField(value = "create_time",fill = FieldFill.INSERT)
     private Date createTime;
 
 }
