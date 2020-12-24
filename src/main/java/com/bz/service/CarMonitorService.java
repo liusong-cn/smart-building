@@ -188,7 +188,7 @@ public class CarMonitorService {
     }
 
     /**
-     * 保存车联基本信息
+     * 保存车辆基本信息
      */
     public void saveBaseInfo(){
         Result r = carsInfo();

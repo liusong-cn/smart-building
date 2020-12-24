@@ -52,17 +52,20 @@ public class ZhaTuBaoController {
     @Resource
     private ZhaTuBaoService zhaTuBaoService;
 
+
     @GetMapping("/getVehicleInfo")
     public Result<List> getVehicleInfo(@RequestParam(value = "plateNo", required = false) String plateNo){
         log.info("查询车辆基本信息");
-        String token = AccessTokenUtil.accessToken.getAccess_token();
+//        String token = AccessTokenUtil.accessToken.getAccess_token();
+        String token = zhaTuBaoService.getTokenFromRedis();
         return zhaTuBaoService.getVehicleInfoAndStatus(username, appkey, token, plateNo, vehicleInfoUrl);
     }
 
     @GetMapping("/getVehicleStatus")
     public Result<List> getVehicleStatus(@RequestParam(value = "plateNo", required = true) String plateNo){
         log.info("查询车辆告警信息");
-        String token = AccessTokenUtil.accessToken.getAccess_token();
+//        String token = AccessTokenUtil.accessToken.getAccess_token();
+        String token = zhaTuBaoService.getTokenFromRedis();
         return zhaTuBaoService.getVehicleInfoAndStatus(username, appkey, token, plateNo, vehicleStatusurl);
     }
 
@@ -72,7 +75,8 @@ public class ZhaTuBaoController {
             return new Result(-1,"车牌号不能为空");
         }
         log.info("查询车辆图片信息");
-        String token = AccessTokenUtil.accessToken.getAccess_token();
+//        String token = AccessTokenUtil.accessToken.getAccess_token();
+        String token = zhaTuBaoService.getTokenFromRedis();
         return zhaTuBaoService.getVehicleInfoAndStatus(username, appkey, token, plateNo, vehicleRecentPic);
     }
 
@@ -82,14 +86,16 @@ public class ZhaTuBaoController {
             return new Result(-1,"车牌号不能为空");
         }
         log.info("查询车辆最近一小时轨迹");
-        String token =  AccessTokenUtil.accessToken.getAccess_token();
+//        String token =  AccessTokenUtil.accessToken.getAccess_token();
+        String token = zhaTuBaoService.getTokenFromRedis();
         return zhaTuBaoService.queryRecentVehicleGps(plateNo,username,appkey,token,vehicleRecentGps);
     }
 
     @GetMapping("/getCarInfoMerged")
     public Result getCarInfoMerged(@RequestParam(value = "plateNo", required = false) String plateNo){
         log.info("查询中自及渣土宝车辆信息合集");
-        String token = AccessTokenUtil.accessToken.getAccess_token();
+//        String token = AccessTokenUtil.accessToken.getAccess_token();
+        String token = zhaTuBaoService.getTokenFromRedis();
         return zhaTuBaoService.queryCarInfoMerged(plateNo,username,appkey,token,vehicleInfoUrl);
     }
 

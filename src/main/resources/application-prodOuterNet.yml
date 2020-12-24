@@ -30,15 +30,15 @@ car:
     info: http://39.108.247.181:8083/back/cd/info
     realtime: http://39.108.247.181:8083/back/cd/realtimeData
 
-zhatubao:
-  username: gaoxin
-  appkey: tr67y8uu
-  appsecret: wdr43ee5y7u44ffg
-  getAuthTokenUrl: http://ticketapi.shomes.cn/api/data/getAuthToken
-  getVehicleInfoUrl: http://ticketapi.shomes.cn/api/data/getVehicleInfo
-  getVehicleStatusurl: http://ticketapi.shomes.cn/api/data/getVehicleStatus
-  getVehicleRecentPic: http://ticketapi.shomes.cn/api/data/getVehicleRecentPic
-  vehicleRecentGps: http://ticketapi.shomes.cn/api/data/getVehicleRecentGps
+#zhatubao:
+#  username: gaoxin
+#  appkey: tr67y8uu
+#  appsecret: wdr43ee5y7u44ffg
+#  getAuthTokenUrl: http://ticketapi.shomes.cn/api/data/getAuthToken
+#  getVehicleInfoUrl: http://ticketapi.shomes.cn/api/data/getVehicleInfo
+#  getVehicleStatusurl: http://ticketapi.shomes.cn/api/data/getVehicleStatus
+#  getVehicleRecentPic: http://ticketapi.shomes.cn/api/data/getVehicleRecentPic
+#  vehicleRecentGps: http://ticketapi.shomes.cn/api/data/getVehicleRecentGps
 
 huazhi:
   corpid: ww49756ef28b994063

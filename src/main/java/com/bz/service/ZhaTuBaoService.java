@@ -9,10 +9,17 @@ import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.bz.cache.CarBaseInfoCache;
 import com.bz.common.entity.Result;
+import com.bz.common.entity.ZTBCarBaseInfo;
+import com.bz.common.entity.ZTBCarGPS;
+import com.bz.common.entity.ZTBCarWarningInfo;
 import com.bz.common.vo.CarBaseInfo;
 import com.bz.common.vo.CarInfo;
 import com.bz.common.vo.CarRealtimeInfo;
+import com.bz.mapper.ZTBCarBaseInfoMapper;
+import com.bz.mapper.ZTBCarGPSMapper;
+import com.bz.mapper.ZTBCarWarningInfoMapper;
 import com.bz.properties.CarMonitorProperties;
+import com.bz.redis.service.RedisService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.ClientProtocolException;
@@ -22,9 +29,11 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,6 +55,42 @@ public class ZhaTuBaoService {
     @Autowired
     private CarMonitorProperties carMonitorProperties;
 
+    @Autowired
+    private RedisService redisService;
+
+    @Value("${zhatubao.username}")
+    private String username;
+
+    @Value("${zhatubao.appsecret}")
+    private String appsecret;
+
+    @Value("${zhatubao.appkey}")
+    private String appkey;
+
+    @Value("${zhatubao.getAuthTokenUrl}")
+    private String authTokenUrl;
+
+    @Value("${zhatubao.getVehicleInfoUrl}")
+    private String vehicleInfoUrl;
+
+    @Value("${zhatubao.getVehicleStatusurl}")
+    private String vehicleStatusurl;
+
+    @Value("${zhatubao.getVehicleRecentPic}")
+    private String vehicleRecentPic;
+
+    @Value("${zhatubao.vehicleRecentGps}")
+    private String vehicleRecentGps;
+
+    @Resource
+    private ZTBCarBaseInfoMapper baseInfoMapper;
+
+    @Resource
+    private ZTBCarWarningInfoMapper warningInfoMapper;
+
+    @Resource
+    private ZTBCarGPSMapper carGPSMapper;
+
     public String getToken(String username, String appsecret, String authTokenUrl){
         try(CloseableHttpClient httpClient = HttpClientBuilder.create().build();
         ){
@@ -66,6 +111,17 @@ public class ZhaTuBaoService {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public synchronized String  getTokenFromRedis(){
+        String token = (String) redisService.get("ztb_token");
+        if(token == null || token.equals("")){
+            token = getToken(username, appsecret, authTokenUrl);
+            log.info("取得ztb_token: {}", token);
+            if(token != null && !token.equals("null") && !token.equals(""))
+                redisService.set("ztb_token", token, 86000L);
+        }
+        return token;
     }
 
 
@@ -232,5 +288,59 @@ public class ZhaTuBaoService {
         s = jsonObject.toString();
         return format(s,new String("字符类型"));
     }
+
+    public void saveWarningInfo(){
+        Map<String, Object> params = buildParamMap();
+        List<ZTBCarBaseInfo> cars = baseInfoMapper.selectList(null);
+        for (ZTBCarBaseInfo car : cars) {
+            params.put("plateNo", car.getPlateNo());
+            String s = HttpUtil.get(vehicleStatusurl, params);
+            log.info("取得车辆告警信息：{}", s);
+            List<ZTBCarWarningInfo> warnings = parseList(s, ZTBCarWarningInfo.class);
+            warnings.forEach(warning -> warningInfoMapper.insert(warning));
+        }
+
+
+    }
+
+    public void saveCarBaseInfo(){
+        Map<String, Object> params = buildParamMap();
+        String s = HttpUtil.get(vehicleInfoUrl, params);
+        log.info("取得车辆基本数据：" + s);
+        List<ZTBCarBaseInfo> cars = parseList(s, ZTBCarBaseInfo.class);
+        cars.stream().forEach(car -> baseInfoMapper.insert(car));
+    }
+
+    public void saveRecentGPS(){
+        Map<String, Object> params = buildParamMap();
+        List<ZTBCarBaseInfo> cars = baseInfoMapper.selectList(null);
+        for (ZTBCarBaseInfo car : cars) {
+            params.put("plateNo", car.getPlateNo());
+            String s = HttpUtil.get(vehicleRecentGps, params);
+            log.info("取得车辆GPS信息：{}", s);
+            List<ZTBCarGPS> gps = parseList(s, ZTBCarGPS.class);
+            gps.stream().forEach(g ->{
+                g.setPlateNo(car.getPlateNo());
+                carGPSMapper.insert(g);
+            });
+        }
+    }
+
+    private Map<String, Object> buildParamMap(){
+        Map<String,Object> params = new HashMap<>();
+        params.put("username", username);
+        params.put("appkey", appkey);
+        params.put("token", getTokenFromRedis());
+        return params;
+    }
+
+    private <T> List<T> parseList(String s, Class<T> t){
+        JSONObject j = new JSONObject(s);
+        JSONArray array = j.getJSONArray("data");
+        List<T> r = array.toList(t);
+        return r;
+    };
+
+
 
 }

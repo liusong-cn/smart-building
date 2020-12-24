@@ -1,9 +1,20 @@
 spring:
   profiles:
-    active: dev
+    active: prodOuterNet
   #boot返回前台时间默认使用GMT，相差8小时
   jackson:
     time-zone: GMT+8
+  redis:
+    database: 0
+    host: 47.108.29.69
+    port: 38379
+    password: developRedis4321
+    jedis:
+      pool:
+        max-active: 8
+        max-idle: 8
+        min-idle: 0
+
 #聚光大气数据
 jg:
   air-data:
@@ -17,3 +28,14 @@ jg:
 chengdu:
   airdata:
     url: http://118.116.8.14:8080/apigateway/data/publish/DefaultHandler?action=GetRealTimeData&_=
+
+# 渣土宝
+zhatubao:
+  username: gaoxin
+  appkey: tr67y8uu
+  appsecret: wdr43ee5y7u44ffg
+  getAuthTokenUrl: http://ticketapi.shomes.cn/api/data/getAuthToken
+  getVehicleInfoUrl: http://ticketapi.shomes.cn/api/data/getVehicleInfo
+  getVehicleStatusurl: http://ticketapi.shomes.cn/api/data/getVehicleStatus
+  getVehicleRecentPic: http://ticketapi.shomes.cn/api/data/getVehicleRecentPic
+  vehicleRecentGps: http://ticketapi.shomes.cn/api/data/getVehicleRecentGps
