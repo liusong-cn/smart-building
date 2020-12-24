@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: prodInnerNet
+    active: dev
   #boot返回前台时间默认使用GMT，相差8小时
   jackson:
     time-zone: GMT+8
